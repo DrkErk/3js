@@ -1,4 +1,7 @@
+import './style.css'
 import * as THREE from 'three'
+import gsap from 'gsap'
+
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -28,4 +31,48 @@ const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
+//renderer.render(scene, camera) redundant if you have the auto update in the "tick"
+
+//time
+//let time = Date.now()
+
+//Clock
+//const clock = new THREE.Clock()
+
+gsap.to(mesh.position, { duration: 1, delay: 1, x: 2})
+gsap.to(mesh.position, { duration: 1, delay: 2, x: 0})
+
+//animations
+const tick = () =>
+{
+
+
+/*
+//Clock
+const elapsedTime = clock.getElapsedTime()
+console.log(elapsedTime)
+*/
+
+//time
+/*
+const currentTime = Date.now()
+const deltaTime = currentTime - time
+time = currentTime
+console.log(deltaTime)
+*/
+
+
+
+//update objects
+//mesh.position.x = Math.tan(elapsedTime)
+//mesh.position.y = Math.cos(elapsedTime)
+
+camera.lookAt(mesh.position)
+
+//render
 renderer.render(scene, camera)
+
+window.requestAnimationFrame(tick)
+}
+
+tick()
