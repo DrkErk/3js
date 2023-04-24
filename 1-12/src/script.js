@@ -21,6 +21,7 @@ const gui = new dat.GUI()
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
+const cubeTextureLoader = new THREE.CubeTextureLoader()
 
 const doorColorTexture = textureLoader.load('/textures/door/color.jpg')
 const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg')
@@ -31,10 +32,18 @@ const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 const matcapTexture = textureLoader.load('textures/matcaps/1.png')
 const gradientTexture = textureLoader.load('textures/gradients/3.jpg')
-
 gradientTexture.minFilter = THREE.NearestFilter
 gradientTexture.magFilter = THREE.NearestFilter
 gradientTexture.generateMipmaps = false
+
+const enviromentMapTexture = cubeTextureLoader.load([
+    '/textures/environmentMaps/0/px.jpg',
+    '/textures/environmentMaps/0/nx.jpg',
+    '/textures/environmentMaps/0/py.jpg',
+    '/textures/environmentMaps/0/ny.jpg',
+    '/textures/environmentMaps/0/pz.jpg',
+    '/textures/environmentMaps/0/nz.jpg'
+])
 
 /**
  * objects
@@ -67,18 +76,35 @@ gradientTexture.generateMipmaps = false
 //material.gradientMap = gradientTexture
 
 ///////////////below is physically base rendered////////////////
+// const material = new THREE.MeshStandardMaterial()
+// material.metalness = 0
+// material.roughness = 1
+// material.map = doorColorTexture
+// material.aoMap = doorAmbientOcclusionTexture
+// material.aoMapIntensity = 1
+// material.displacementMap = doorHeightTexture
+// material.displacementScale = 0.1
+// material.metalnessMap = doorMetalnessTexture
+// material.roughnessMap = doorRoughnessTexture
+// material.normalMap = doorNormalTexture
+// material.normalScale.set(.5, .5)
+// material.transparent = true
+// material.alphaMap = doorAlphaTexture
+
 const material = new THREE.MeshStandardMaterial()
-material.metalness = .45
-material.roughness = .65
-material.map = doorColorTexture
-material.aoMap = doorAmbientOcclusionTexture
+material.metalness = .7
+material.roughness = .2
+material.envMap = enviromentMapTexture
 
 
+gui.add(material, 'aoMapIntensity').min(0).max(100).step(0.001)
 gui.add(material, 'metalness').min(0).max(1).step(0.001)
 gui.add(material, 'roughness').min(0).max(1).step(0.001)
+gui.add(material, 'displacementScale').min(0).max(1).step(0.001)
+
 
 const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(0.5, 16, 16),
+    new THREE.SphereGeometry(0.5, 64, 64),
     material
 )
 sphere.position.x = 1.5
@@ -92,7 +118,7 @@ sphere.geometry.setAttribute(
 
 
 const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(1, 1, 1, 1),
+    new THREE.PlaneGeometry(1, 1, 100, 100),
     material
 )
 
@@ -104,7 +130,7 @@ plane.geometry.setAttribute(
 
 
 const torus = new THREE.Mesh(
-    new THREE.TorusGeometry(.3, .2, 16, 32),
+    new THREE.TorusGeometry(.3, .2, 64, 128),
     material
 )
 torus.position.x = -1.5
