@@ -27,10 +27,12 @@ const particlesGeometery = new THREE.BufferGeometry()
 const count = 5000
 
 const positions = new Float32Array(count * 3)
+const colors = new Float32Array(count * 3)
 
 for(let i = 0; i < count* 3; i++ )
 {
-    positions[i] = (Math.random() - .5) * 10    
+    positions[i] = (Math.random() - .5) * 1
+    colors[i] = Math.random()
 }
 
 particlesGeometery.setAttribute(
@@ -38,15 +40,29 @@ particlesGeometery.setAttribute(
     new THREE.BufferAttribute(positions, 3)
     )
 
+
+
+particlesGeometery.setAttribute(
+    'color', 
+    new THREE.BufferAttribute(colors, 3)
+    )
+
 // Material
 const particleMaterial = new THREE.PointsMaterial({
-    size: .1,
-    sizeAttenuation: true
+    //size: .1,
+    //sizeAttenuation: true
 })
-// particleMaterial.size = .02
-// particleMaterial.sizeAttenuation = true
-particleMaterial.color = new THREE.Color('red')
-particleMaterial.map = particleTexture
+particleMaterial.size = .02
+particleMaterial.sizeAttenuation = true
+//particleMaterial.color = new THREE.Color('#ff88cc') // will add to the vertex color
+particleMaterial.transparent = true
+particleMaterial.alphaMap = particleTexture
+//particleMaterial.alphaTest = .001 // good but some dont get rendered still
+//particleMaterial.depthTest = false // good but goes through all objects
+particleMaterial.depthWrite = false // can have certain bugs
+particleMaterial.blending = THREE.AdditiveBlending
+
+particleMaterial.vertexColors = true
 
 
 // points
@@ -62,7 +78,7 @@ const cube = new THREE.Mesh(
     new THREE.MeshBasicMaterial()
 )
 scene.add(cube)
-
+cube.visible = false
 /**
  * Sizes
  */
@@ -115,6 +131,22 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    //update particles
+    //particles.rotation.y = elapsedTime * .2
+
+    for (let i = 0; i < count; i++)
+    {
+        const i3 = i * 3
+
+        //x
+        const x = particlesGeometery.attributes.position.array[i3]
+        
+        //y
+        particlesGeometery.attributes.position.array[i3 + 1] = -Math.abs(Math.sin(elapsedTime + x))
+
+    }
+    particlesGeometery.attributes.position.needsUpdate = true
 
     // Update controls
     controls.update()
