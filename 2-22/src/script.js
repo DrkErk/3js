@@ -1,5 +1,14 @@
+/**
+-binary gltf is all in one and cant really alter
+-draco is compressed
+
+
+ */
+
+
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import * as dat from 'lil-gui'
 
 /**
@@ -13,6 +22,37 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+/**
+ * models
+ */
+const gltfLoader = new GLTFLoader()
+
+gltfLoader.load(
+    '/models/Duck/glTF/Duck.gltf',
+    (gltf) =>
+    {
+        console.log("success")
+        scene.add(gltf.scene.children[0])
+    },
+    /*
+    for above you can pass in what you have loaded to get the information
+    (gltf) =>
+    {
+        console.log(gltf)
+    },
+    */
+    () =>
+    {
+        console.log("progress")
+    },
+    () =>
+    {
+        console.log("error")
+    }
+
+)
+
 
 /**
  * Floor
