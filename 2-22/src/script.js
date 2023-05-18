@@ -9,6 +9,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import * as dat from 'lil-gui'
 
 /**
@@ -26,14 +27,51 @@ const scene = new THREE.Scene()
 /**
  * models
  */
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('/draco/')
+
 const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+
+let mixer = null
 
 gltfLoader.load(
-    '/models/Duck/glTF/Duck.gltf',
+    '/models/Fox/glTF/Fox.gltf',
     (gltf) =>
     {
+        mixer = new THREE.AnimationMixer(gltf.scene)
+        const action = mixer.clipAction(gltf.animations[0])
+
+
+
+        action.play()
+
         console.log("success")
-        scene.add(gltf.scene.children[0])
+        gltf.scene.scale.set(.025, .025, .025)
+        scene.add(gltf.scene) // one line add the entire item which is the scene
+        
+        /*
+        spread operator = ...
+        get children in new array and then can for loop on it.
+
+        const children = [...gltf.scene.children]
+        for(const child of children)
+        {
+            scene.add(child)
+        }
+        */
+
+
+        /*
+        This method takes the children from items added and then children of item imported goes down, so always take first position
+
+        while(gltf.scene.children.length)
+        {
+            scene.add(gltf.scene.children[0])
+        }
+        */
+
+
     },
     /*
     for above you can pass in what you have loaded to get the information
@@ -145,6 +183,11 @@ const tick = () =>
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
 
+    //Update mixer
+    if(mixer !== null)
+    {
+    mixer.update(deltaTime)
+    }
     // Update controls
     controls.update()
 
