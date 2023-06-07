@@ -2,6 +2,9 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
+import galaxyVertexShader from "./shaders/galaxy/vertex.glsl"
+import galaxyFragmentShader from "./shaders/galaxy/fragment.glsl"
+
 /**
  * Base
  */
@@ -48,7 +51,8 @@ const generateGalaxy = () =>
 
     const positions = new Float32Array(parameters.count * 3)
     const colors = new Float32Array(parameters.count * 3)
-
+    const scales = new Float32Array(parameters.count * 1)
+    
     const insideColor = new THREE.Color(parameters.insideColor)
     const outsideColor = new THREE.Color(parameters.outsideColor)
 
@@ -76,20 +80,28 @@ const generateGalaxy = () =>
         colors[i3    ] = mixedColor.r
         colors[i3 + 1] = mixedColor.g
         colors[i3 + 2] = mixedColor.b
+
+        //scale 
+        scales[i] = Math.random()
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    geometry.setAttribute('aScale', new THREE.BufferAttribute(colors, 1))
 
     /**
      * Material
      */
-    material = new THREE.PointsMaterial({
-        size: parameters.size,
-        sizeAttenuation: true,
+    material = new THREE.ShaderMaterial({
         depthWrite: false,
         blending: THREE.AdditiveBlending,
-        vertexColors: true
+        vertexColors: true,
+        vertexShader: galaxyVertexShader,
+        fragmentShader: galaxyFragmentShader,
+        uniforms:
+        {
+            uSize: {value: 8 * renderer.getPixelRatio()}
+        }
     })
 
     /**
@@ -99,7 +111,7 @@ const generateGalaxy = () =>
     scene.add(points)
 }
 
-generateGalaxy()
+
 
 gui.add(parameters, 'count').min(100).max(1000000).step(100).onFinishChange(generateGalaxy)
 gui.add(parameters, 'radius').min(0.01).max(20).step(0.01).onFinishChange(generateGalaxy)
@@ -154,6 +166,10 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+/**
+ * Generate Galaxy
+ */
+generateGalaxy()
 
 /**
  * Animate
