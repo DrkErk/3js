@@ -10,6 +10,12 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass.js'
 import {DotScreenPass} from 'three/examples/jsm/postprocessing/DotScreenPass.js'
+import {GlitchPass} from 'three/examples/jsm/postprocessing/GlitchPass.js'
+import {ShaderPass} from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import {RGBShiftShader} from 'three/examples/jsm/shaders/RGBShiftShader.js'
+import {GammaCorrectionShader} from 'three/examples/jsm/shaders/GammaCorrectionShader.js'
+import {SMAAPass} from 'three/examples/jsm/postprocessing/SMAAPass.js'
+import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import * as dat from 'lil-gui'
 
 
@@ -112,6 +118,10 @@ window.addEventListener('resize', () =>
     // Update renderer
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    //update the effect composer
+    effectComposer.setSize(sizes.width, sizes.height)
+    effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
 /**
@@ -145,17 +155,103 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 /**
  * Post Processing
  */
+const renderTarget = new THREE.WebGLRenderTarget(
+    800,
+    600,
+    {
+        //this version will not work on all browsers
+        //samples: renderer.getPixelRatio() === 1 ? 2 : 0 //re-activates anti aa
+    }
+)
 
-const effectComposer = new EffectComposer(renderer)
+
+//effect composer
+const effectComposer = new EffectComposer(renderer, renderTarget)
 effectComposer.setPixelRatio(Math.min(window.devicePixelRatio,2))
 effectComposer.setSize(sizes.width, sizes.height)
 
+//render pass
 const renderPass = new RenderPass(scene, camera)
 effectComposer.addPass(renderPass)
 
-
+//dot screen pass
 const dotScreenPass = new DotScreenPass()
+dotScreenPass.enabled = false
 effectComposer.addPass(dotScreenPass)
+
+//glitch pass
+const glitchPass = new GlitchPass()
+glitchPass.goWild = false
+glitchPass.enabled = false
+effectComposer.addPass(glitchPass)
+
+//rgb shift pass
+const rgbShiftPass = new ShaderPass(RGBShiftShader)
+rgbShiftPass.enabled = false
+effectComposer.addPass(rgbShiftPass)
+
+//gamma correction pass
+const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
+gammaCorrectionPass.enabled = true
+effectComposer.addPass(gammaCorrectionPass)
+
+//unreal bloom pass
+const unrealBloomPass = new UnrealBloomPass()
+unrealBloomPass.strength = 0.3
+unrealBloomPass.radius = 1
+unrealBloomPass.threshold = 0.6
+effectComposer.addPass(unrealBloomPass)
+
+gui.add(unrealBloomPass, 'enabled')
+gui.add(unrealBloomPass, 'strength').min(0).max(2).step(0.001)
+gui.add(unrealBloomPass, 'radius').min(0).max(2).step(0.001)
+gui.add(unrealBloomPass, 'threshold').min(0).max(1).step(0.001)
+
+//C tint shader
+const TintShader = {
+    uniforms:
+    {
+        tDiffuse: {value : null},
+        uTint: {value: null}
+    },
+    vertexShader: `
+    varying vec2 vUv;
+    void main()
+    {
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        vUv = uv;
+    }
+    `,
+    fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform vec3 uTint;
+    varying vec2 vUv;
+    void main()
+    {
+        vec4 color = texture2D(tDiffuse, vUv);
+        color.rgb += uTint;
+        gl_FragColor = color;
+    }
+    `
+}
+const tintPass = new ShaderPass(TintShader)
+tintPass.material.uniforms.uTint.value = new THREE.Vector3(1.0, 0.0, 0.0)
+tintPass.enabled = true
+effectComposer.addPass(tintPass)
+
+gui.add(tintPass.material.uniforms.uTint.value, 'x').min(-1).max(1).step(0.001).name('red')
+gui.add(tintPass.material.uniforms.uTint.value, 'y').min(-1).max(1).step(0.001).name('green')
+gui.add(tintPass.material.uniforms.uTint.value, 'z').min(-1).max(1).step(0.001).name('blue')
+
+
+//must be at the end
+//SM-AA (SubPixel Morphological AntiAliasing)
+if(renderer.getPixelRatio() === 1 && !renderer.capabilities.isWebGL2)
+{
+const smaaPass = new SMAAPass()
+effectComposer.addPass(smaaPass)
+}
 
 /**
  * Animate
