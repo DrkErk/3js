@@ -74,6 +74,15 @@ gui.add(global, 'envMapIntensity').min(0).max(10).step(0.001).onChange(updateAll
 // scene.environment = environmentMap
 // scene.background = environmentMap
 
+/**
+ * HDR (RGBE) equirectangular ( HEAVY TO LOAD AND RENDER)
+ */
+rgbeLoader.load('/environmentMaps/0/2k.hdr', (environmentMap) => {
+    environmentMap.mapping = THREE.EquirectangularReflectionMapping
+
+    scene.background = environmentMap
+    scene.environment = environmentMap
+})
 
 /**
  * Torus Knot
