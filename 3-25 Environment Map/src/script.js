@@ -9,6 +9,15 @@ import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js'
 //can have a higher range than traditional images for color values
 //
 
+//In blender
+// G S R allow you to change how the meshes are set up
+// Z to quick switch render modes
+// shift a opens menu to quick add
+// middle mouse to help move on grid
+// f12 is render
+// alt + S in render to save photo where ctrl + s saves the scene 
+// shft + d dupes
+
 /**
  * Loaders
  */
@@ -77,7 +86,7 @@ gui.add(global, 'envMapIntensity').min(0).max(10).step(0.001).onChange(updateAll
 /**
  * HDR (RGBE) equirectangular ( HEAVY TO LOAD AND RENDER)
  */
-rgbeLoader.load('/environmentMaps/0/2k.hdr', (environmentMap) => {
+rgbeLoader.load('/environmentMaps/blender-2k.hdr', (environmentMap) => {
     environmentMap.mapping = THREE.EquirectangularReflectionMapping
 
     scene.background = environmentMap
