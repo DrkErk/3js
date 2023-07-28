@@ -1,0 +1,18 @@
+- X is delete
+- unlink stuff would be (press a to select all and then (f3 search) unlink object and data
+- Top right of the viewport with the two circles (overlay) is option to use "face orientation" (allows you to see if the face will have issues)
+- TO FIX ABOVE: click on all the faces and (f3 search) flip OR if its a multiple meshes together and one is red: (f3 search) recalculate outside (edit mode only)
+-
+- SCALE IN EDIT MODE SO THAT THE SCALE IS ALWAYS 1 or have unwrapping issues
+- (select all and CTRL + A to readjust to center point
+-
+- 2 ways to unwrap objects. "smart" and manually
+-
+- TO UNWRAP UVS MANUALLY, (click object, edit mode, press u, unwrap
+-
+-CTRL L to select only the mesh. (ie 1 fence post of the fence)
+-
+-When you have the viewport for the UVs, go to the double circle for show overlays and display stretch: area
+- and try and get all the area colors to match (blue in current case)
+-
+
