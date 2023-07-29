@@ -15,4 +15,8 @@
 -When you have the viewport for the UVs, go to the double circle for show overlays and display stretch: area
 - and try and get all the area colors to match (blue in current case)
 -
+- TO BAKE: in obj mode, with an extra view, click new image and set up the photos params
+- After you get your image, click image to save. then save as an hdr
+- add another view  and set to shader editor. Then shift A while having the mouse in the view and add a texture/shader texture
 
+-
