@@ -26,5 +26,14 @@
 -If you need to rebake the baked hdr. only select the objects that need to be backed and move the unwrap of them and rebake.
 - make sure that "CLEAR IMAGE" IS NOT CLICKED 
 -
-- (now we have issues with coloring and all other things
+- (now we have issues with coloring/ the fact that it's hdr (a large size file))s
+- ^ so open a tab as compistor and "use nodes"
+- then add in view (shift a) (to add "input" "image")
+- add a "filter" "denoise" to the view then line up the image to the denoise and to the composite. (set out resolution to what you need ie 4096)
+- (press M to mute the scene being loaded while you get the baking textures)
+- to reset the scene to being loaded.(press m to unmute the scene and delink the img being loaded. (best to mute for speed purposes))
 -
+- When exporting, REMEMBER TO KEEP THE NONE SCENE OBJS ( PL/ CAMERA/ ETC)
+- (reminder: export as gltf)
+
+
