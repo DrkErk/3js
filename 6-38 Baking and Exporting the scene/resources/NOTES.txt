@@ -18,5 +18,13 @@
 - TO BAKE: in obj mode, with an extra view, click new image and set up the photos params
 - After you get your image, click image to save. then save as an hdr
 - add another view  and set to shader editor. Then shift A while having the mouse in the view and add a texture/shader texture
-
+-
+-To bring out the smaller views side bar press n
+-
+-alt s to  save the side views
+-
+-If you need to rebake the baked hdr. only select the objects that need to be backed and move the unwrap of them and rebake.
+- make sure that "CLEAR IMAGE" IS NOT CLICKED 
+-
+- (now we have issues with coloring and all other things
 -
