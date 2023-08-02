@@ -4,6 +4,16 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
+// ISNT WORKING FOR PERFORMANCE
+/**
+ * spectorjs
+ */
+//const SPECTOR = require('spectorjs')
+//const spector = new SPECTOR.Spector()
+//spector.displayUI()
+// ISNT WORKING FOR PERFORMANCE
+
+
 /**
  * Base
  */
@@ -33,14 +43,60 @@ const gltfLoader = new GLTFLoader()
 gltfLoader.setDRACOLoader(dracoLoader)
 
 /**
+ * Texture
+ */
+
+const bakedTexture = textureLoader.load('baked.jpg') // once again use "/" before the item if you have paths
+bakedTexture.flipY = false
+bakedTexture.colorSpace = THREE.SRGBColorSpace
+/**
  * Object
  */
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial()
-)
 
-scene.add(cube)
+
+/**
+ * Materials
+ */
+//baked light material
+const bakedMaterial = new THREE.MeshBasicMaterial({map: bakedTexture})
+//pole light material
+const poleLightMaterial = new THREE.MeshBasicMaterial({color: 0xffffe5})
+const portalLightMaterial = new THREE.MeshBasicMaterial({color: 0xffffff})
+
+/**
+ * model
+ */
+gltfLoader.load(
+    'portal.glb',  // the filepath to get this object is relative so from main directory to object
+    (gltf) =>
+    {
+        gltf.scene.traverse((child) => {
+            child.material = bakedMaterial
+        })
+
+        const poleLightAMesh = gltf.scene.children.find((child)=> child.name === 'poleLightA')
+        const poleLightBMesh = gltf.scene.children.find((child)=> child.name === 'poleLightB')
+        const portalLightMesh = gltf.scene.children.find((child)=> child.name === 'Portal')
+
+        poleLightAMesh.material = poleLightMaterial
+        poleLightBMesh.material = poleLightMaterial
+        portalLightMesh.material = portalLightMaterial
+
+        /**
+         const poleLightAMesh = gltf.scene.children.find((child)=> child.name === 'poleLightA')
+                                if you have 1 parameter (child => child.name === 'poleLightA')
+        
+         and the spread out version
+            
+            const poleLightAMesh = gltf.scene.children.find((child)=>
+            {
+            return child.name === 'poleLightA'
+            })
+         */
+
+        scene.add(gltf.scene)
+    }
+)
 
 /**
  * Sizes
