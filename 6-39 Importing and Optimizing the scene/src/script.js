@@ -74,10 +74,12 @@ gltfLoader.load(
             child.material = bakedMaterial
         })
 
+        const bakedMesh = gltf.scene.children.find((child)=> child.name === 'Baked')
         const poleLightAMesh = gltf.scene.children.find((child)=> child.name === 'poleLightA')
         const poleLightBMesh = gltf.scene.children.find((child)=> child.name === 'poleLightB')
         const portalLightMesh = gltf.scene.children.find((child)=> child.name === 'Portal')
 
+        bakedMesh.material = bakedMaterial
         poleLightAMesh.material = poleLightMaterial
         poleLightBMesh.material = poleLightMaterial
         portalLightMesh.material = portalLightMaterial
