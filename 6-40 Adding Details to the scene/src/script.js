@@ -8,9 +8,11 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
  * Base
  */
 // Debug
+const debugObject = {}
 const gui = new dat.GUI({
     width: 400
 })
+
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -75,6 +77,25 @@ gltfLoader.load(
 )
 
 /**
+ * Fireflies
+ */
+const fireflyGeometery = new THREE.BufferGeometry()
+const fireflyCount = 30
+const positionArray = new Float32Array(fireflyCount * 3)
+
+for(let i = 0; i < fireflyCount; i++)
+{
+    positionArray[i * 3 + 0] = Math.random() * 4
+    positionArray[i * 3 + 1] = Math.random() * 4
+    positionArray[i * 3 + 2] = Math.random() * 4
+}
+
+fireflyGeometery.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
+
+// material
+
+
+/**
  * Sizes
  */
 const sizes = {
@@ -120,6 +141,13 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+debugObject.clearColor = '#ff0000'
+renderer.setClearColor(debugObject.clearColor)
+gui.addColor(debugObject, 'clearColor')
+   .onChange(() =>{
+    renderer.setClearColor(debugObject.clearColor)
+   })
 
 /**
  * Animate
