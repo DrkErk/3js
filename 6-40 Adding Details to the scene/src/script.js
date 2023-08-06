@@ -96,7 +96,12 @@ for(let i = 0; i < fireflyCount; i++)
 fireflyGeometery.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
 
 // material
-const fireflyMaterial = new THREE.PointsMaterial({size: 0.1, sizeAttenuation: true})
+const fireflyMaterial = new THREE.ShaderMaterial({
+    uniforms:
+    {uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)}},
+    vertexShader: fireflyVertexShader,
+    fragmentShader: fireflyFragmentShader
+})
 
 //Points
 const firefly = new THREE.Points(fireflyGeometery, fireflyMaterial)
