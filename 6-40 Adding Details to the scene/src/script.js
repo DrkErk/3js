@@ -3,6 +3,9 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+import fireflyVertexShader from './shaders/firefly/vertex.glsl'
+import fireflyFragmentShader from './shaders/firefly/fragment.glsl'
+
 
 /**
  * Base
@@ -85,14 +88,19 @@ const positionArray = new Float32Array(fireflyCount * 3)
 
 for(let i = 0; i < fireflyCount; i++)
 {
-    positionArray[i * 3 + 0] = Math.random() * 4
-    positionArray[i * 3 + 1] = Math.random() * 4
-    positionArray[i * 3 + 2] = Math.random() * 4
+    positionArray[i * 3 + 0] = (Math.random() - 0.5) * 4
+    positionArray[i * 3 + 1] = Math.random() * 1.5
+    positionArray[i * 3 + 2] = (Math.random() - 0.5) * 4
 }
 
 fireflyGeometery.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
 
 // material
+const fireflyMaterial = new THREE.PointsMaterial({size: 0.1, sizeAttenuation: true})
+
+//Points
+const firefly = new THREE.Points(fireflyGeometery, fireflyMaterial)
+scene.add(firefly)
 
 
 /**
