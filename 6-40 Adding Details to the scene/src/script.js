@@ -85,23 +85,36 @@ gltfLoader.load(
 const fireflyGeometery = new THREE.BufferGeometry()
 const fireflyCount = 30
 const positionArray = new Float32Array(fireflyCount * 3)
+const scaleArray = new Float32Array(fireflyCount)
+
 
 for(let i = 0; i < fireflyCount; i++)
 {
     positionArray[i * 3 + 0] = (Math.random() - 0.5) * 4
     positionArray[i * 3 + 1] = Math.random() * 1.5
     positionArray[i * 3 + 2] = (Math.random() - 0.5) * 4
+
+    scaleArray[i] = Math.random()
 }
 
 fireflyGeometery.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
+fireflyGeometery.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1))
+
 
 // material
 const fireflyMaterial = new THREE.ShaderMaterial({
     uniforms:
-    {uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)}},
+    {
+        uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)},
+        uSize: {value: 100}
+    },
     vertexShader: fireflyVertexShader,
-    fragmentShader: fireflyFragmentShader
+    fragmentShader: fireflyFragmentShader,
+    transparent: true
+
 })
+
+gui.add(fireflyMaterial.uniforms.uSize, 'value').min(0).max(500).step(1).name('FFM uSize')
 
 //Points
 const firefly = new THREE.Points(fireflyGeometery, fireflyMaterial)
@@ -129,6 +142,9 @@ window.addEventListener('resize', () =>
     // Update renderer
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    //update firefly
+    fireflyMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, 2)
 })
 
 /**
