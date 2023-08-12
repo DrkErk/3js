@@ -3,6 +3,8 @@
 //-not auto closing, you need to always close (ie, <br> needs to be <br /> or related)
 //- reserved keywords still exist, in the root, you cant use class or for, instead use className and htmlFor
 // - in {} you can use js and some. {/* is how you comment in the root */}
+//pink {} is "im going to send some js", blue {} is the object
+//use camal case when doing css in js (background-color is backgroundColor)
 
 import './style.css'
 import { createRoot } from 'react-dom/client'
@@ -13,7 +15,7 @@ const item = "var"
 
 root.render(
 <>
-    <h1 className='title'>
+    <h1 style={{color: 'coral', backgroundColor: 'floralwhite'}}>
         Hello {item}
         </h1>
     <p>Content the content the <br></br> content </p>
