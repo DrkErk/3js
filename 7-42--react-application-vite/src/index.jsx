@@ -18,7 +18,7 @@ root.render(
     <h1 style={{color: 'coral', backgroundColor: 'floralwhite'}}>
         Hello {item}
         </h1>
-    <p>Content the content the <br></br> content </p>
+    <p className='paragraph'>Content the content the <br></br> content </p>
 
 
 </>
