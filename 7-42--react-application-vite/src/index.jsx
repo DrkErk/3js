@@ -17,11 +17,7 @@ const item = "var"
 
 root.render(
 <>
-    <h1 style={{color: 'coral', backgroundColor: 'floralwhite'}}>
-        Hello {item}
-        </h1>
-    <p className='paragraph'>Content the content the <br></br> content </p>
-
+   <App />
 
 </>
 )
