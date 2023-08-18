@@ -6,19 +6,24 @@
 //- the return null function is 
 //
 //- (??) is a nullish coalescing operator, so if undefined or null, return something
+//
+//- Prop is in the js of the parans of the Clicker. thats where we can pull specific info
+//- we can put a default css in the prop ie color='red' would make red the default
+//
+// hsl colors (hue sat light) `hsl(${Math.random() * 360 }deg, 100%, 70%)`
 
 import { useEffect, useState } from 'react'
 
-export default function Clicker()
+export default function Clicker({keyName, color})
 {
-    const [count, setCount] = useState(parseInt(localStorage.getItem('count') ?? 0)) //usestate
+    const [count, setCount] = useState(parseInt(localStorage.getItem(keyName) ?? 0)) //usestate
 
     useEffect(() => //useEffect first load
     {
 
         return () =>
         {
-            localStorage.removeItem('count')
+            localStorage.removeItem(keyName)
         }
     },
     []
@@ -26,7 +31,7 @@ export default function Clicker()
 
     useEffect(() => //useEffect update
     {
-        localStorage.setItem('count', count)
+        localStorage.setItem(keyName, count)
     },
     [count]
     )
@@ -39,7 +44,7 @@ export default function Clicker()
 
 
     return <div>
-        <div>Counts :{count}</div>
+        <div style={{color: color}}>Counts : {count}</div>
         <button onClick={buttonClick}>Click here</button>
     </div>
 } 

@@ -15,7 +15,11 @@ export default function App()
 
     return <>
     <button onClick={ toggleClicker }> {hasClicker? 'Hide' : 'Show' } clickApp</button>
-    {hasClicker && <Clicker/> }
+    {hasClicker && <> 
+    <Clicker keyName="countA" color={ `hsl(${Math.random() * 360 }deg, 100%, 70%)`} />
+    <Clicker keyName="countB" color={ `hsl(${Math.random() * 360 }deg, 100%, 70%)`} />
+    <Clicker keyName="countC" color={ `hsl(${Math.random() * 360 }deg, 100%, 70%)`} />
+     </> }
     
     </>
 }
