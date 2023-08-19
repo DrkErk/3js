@@ -15,9 +15,16 @@ const root = createRoot(document.querySelector('#root'))
 
 const item = "var"
 
+//inside the app is a render for 
+
 root.render(
 <>
-   <App />
+   <App>
+    <h1>   this    </h1>
+    <h2>   is it   </h2>
+   </App> 
 
 </>
 )
+
+//Can even send children as <App children={<> <h1>Top Text </h1> <h2>Bottom Text </h2>  </>} />

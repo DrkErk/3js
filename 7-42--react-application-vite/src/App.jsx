@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Clicker from './Clicker.jsx';
 
-export default function App()
+export default function App({children})
 {
     const [hasClicker, setHasClicker] = useState(true)
 
@@ -14,6 +14,7 @@ export default function App()
     }
 
     return <>
+        {children}
     <button onClick={ toggleClicker }> {hasClicker? 'Hide' : 'Show' } clickApp</button>
     {hasClicker && <> 
     <Clicker keyName="countA" color={ `hsl(${Math.random() * 360 }deg, 100%, 70%)`} />
