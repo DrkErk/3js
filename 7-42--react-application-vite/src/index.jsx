@@ -6,6 +6,8 @@
 //- pink {} is "im going to send some js", blue {} is the object
 //- use camal case when doing css in js (background-color is backgroundColor)
 //- TAILWIND css for jsx (if I want to use it)
+//
+//-Do NOT get values from the children
 
 import App from './App.jsx'
 import './style.css'
@@ -14,7 +16,7 @@ import { createRoot } from 'react-dom/client'
 const root = createRoot(document.querySelector('#root'))
 
 const item = "var"
-const test = ""
+
 //inside the app is a render for 
 
 root.render(

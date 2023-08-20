@@ -7,6 +7,8 @@ import Clicker from './Clicker.jsx';
 export default function App({children})
 {
     const [hasClicker, setHasClicker] = useState(true)
+    const [count, setCount] = useState(0)
+
 
     const toggleClicker = () =>
     {
