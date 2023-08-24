@@ -1,9 +1,12 @@
 //- Ternary Condition, funct (?)<-TC somthing : else
 //- && will be 2 args (starting on the left, if left is false not even go to the right) then return the right part
+//
+//- Usememo is used to handle complex calculations and prevent that calculation from happening on each draw unless its really 
+//^- ness
 
 import { useMemo, useState } from 'react';
 import Clicker from './Clicker.jsx';
-
+import People from './People.jsx';
 
 export default function App({clickerCount, children})
 {
@@ -16,7 +19,7 @@ export default function App({clickerCount, children})
         setHasClicker(!hasClicker)
     }
 
-    const increment = () => 
+    const increment = () =>
     {
         setCount(count + 1)
     }
@@ -46,7 +49,7 @@ export default function App({clickerCount, children})
     return <>
         {children}
         <div>Total Count: {count} </div>
-    <button onClick={ toggleClicker }> {hasClicker? 'Hide' : 'Show' } clickApp</button>
+    <button onClick={ toggleClicker }> {hasClicker ? 'Hide' : 'Show' } clickApp</button>
 
         {hasClicker && <> 
             { [...Array(clickerCount)].map((value,index) => {
@@ -59,6 +62,7 @@ export default function App({clickerCount, children})
             })}
     
         </>}
+        <People />
     </>
      
 }

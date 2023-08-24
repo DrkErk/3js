@@ -11,15 +11,21 @@
 //- we can put a default css in the prop ie color='red' would make red the default
 //
 // hsl colors (hue sat light) `hsl(${Math.random() * 360 }deg, 100%, 70%)`
+//
+//- useRef needs to be in the useeffect to in order to get  the button references on first load
 
-import { useEffect, useState } from 'react'
 
-export default function Clicker({increment, keyName, color})
+import {  useRef, useEffect, useState } from 'react'
+
+export default function Clicker({ increment, keyName, color })
 {
     const [count, setCount] = useState(parseInt(localStorage.getItem(keyName) ?? 0)) //usestate
+    const buttonRef = useRef()
 
     useEffect(() => //useEffect first load
     {
+          buttonRef.current.style.backgroundColor = 'green'
+          buttonRef.current.style.color = 'red'
 
         return () =>
         {
@@ -46,6 +52,6 @@ export default function Clicker({increment, keyName, color})
 
     return <div>
         <div style={{color: color}}>Counts : {count}</div>
-        <button onClick={buttonClick}>Click here</button>
+        <button ref={buttonRef} onClick={buttonClick}>Click here</button>
     </div>
 } 
