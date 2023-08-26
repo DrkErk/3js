@@ -6,15 +6,18 @@
 //
 //- Extend converts things into its declaritive version
 
-import {extend, useFrame } from "@react-three/fiber"
+import { useThree, extend, useFrame } from "@react-three/fiber"
 import { useRef } from "react"
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
+extend({ OrbitControls: OrbitControls})
+
 export default function Experience()
 {
-    
-   const cubeRef = useRef()
-   const groupRef = useRef()
+    const {camera, gl} = useThree() // allows for getting the same info as the state, from the useframe
+                                    // you can either destruct it like above or apply all to a var like "three"
+    const cubeRef = useRef()
+    const groupRef = useRef()
 
     useFrame((state, delta)=>
     {
@@ -24,21 +27,24 @@ export default function Experience()
     
 
     return <>
+
+        <orbitControls args={ [camera, gl.domElement] } />
+        <directionalLight />
         
         <group ref={ groupRef } >
             <mesh position-x={ - 2 }>
                 <sphereGeometry/>
-                <meshBasicMaterial color="orange"/>
+                <meshStandardMaterial color="orange"/>
             </mesh>
             <mesh ref={cubeRef} rotation-y={Math.PI * 0.25} position-x={ 2 }>
                 <boxGeometry/>
-                <meshBasicMaterial color="mediumpurple" />
+                <meshStandardMaterial color="mediumpurple" />
             </mesh>
         </group>
 
         <mesh position-y={ -1 } rotation-x={- Math.PI * 0.5} scale = { 10 }>
             <planeGeometry/>
-            <meshBasicMaterial color="green" />
+            <meshStandardMaterial color="green" />
         </mesh>
 
     </>
