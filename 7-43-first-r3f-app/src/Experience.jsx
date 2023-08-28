@@ -5,6 +5,8 @@
 //- Has the hard way orbit controls
 //
 //- Extend converts things into its declaritive version
+//
+//- Background is transparent by default
 
 import { useThree, extend, useFrame } from "@react-three/fiber"
 import { useRef } from "react"
@@ -22,14 +24,19 @@ export default function Experience()
 
     useFrame((state, delta)=>
     {
+        // const angle = state.clock.elapsedTime
+        // state.camera.position.x = Math.sin(angle) * 8
+        // state.camera.position.z = Math.cos(angle) * 8
+        // state.camera.lookAt(0,0,0)
+
         cubeRef.current.rotation.y += delta
-        groupRef.current.rotation.y += (1/2) * delta
+        //groupRef.current.rotation.y += (1/2) * delta
     })
     
 
     return <>
 
-        <orbitControls args={ [camera, gl.domElement] } />
+         <orbitControls args={ [camera, gl.domElement] } />
         <directionalLight position={ [1,2,3] } intensity={ 1.5 } />
         <ambientLight intensity={ 0.5 } />
         
