@@ -21,7 +21,7 @@ const item = "var"
 
 root.render(
 <>
-   <App clickerCount ={ 3 } >
+   <App clickerCount ={ 1} >
     <h1>   this    </h1>
     <h2>   is it   </h2>
    </App> 
