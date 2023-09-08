@@ -1,5 +1,9 @@
+//
+//- If you have accumluate shadows you have to not have receiveShadow activated on the floor
+
+
 import { useFrame } from '@react-three/fiber'
-import { BakeShadows, useHelper, OrbitControls } from '@react-three/drei'
+import { RandomizedLight, AccumulativeShadows, SoftShadows, BakeShadows, useHelper, OrbitControls } from '@react-three/drei'
 import { useRef } from 'react'
 import { Perf } from 'r3f-perf'
 import * as THREE from 'three'
@@ -18,12 +22,16 @@ export default function Experience()
 
     return <>
 
-        <BakeShadows/>
+        {/* <BakeShadows/> */}
+        {/*<SoftShadows frustum={3.75} size={50} near={9.5} samples={17} rings={11} /> */}
 
         <color args={['red']}  attach="background"/>
         <Perf position="top-left" />
         <OrbitControls makeDefault />
 
+        <AccumulativeShadows position={[0, - 0.99, 0]} scale={10} > 
+        <RandomizedLight position={ [1,2,3] } amount={8} radius={1} ambient={0.5} intensity={1} bias={0.001} />
+        </AccumulativeShadows>
 
         <directionalLight 
             ref={directionalLight} 
@@ -31,10 +39,7 @@ export default function Experience()
             shadow-mapSize={[1024, 1024]}
             shadow-camera-near={1}
             shadow-camera-far={10}
-            shadow-camera-top={2}
-            shadow-camera-right={2}
-            shadow-camera-bottom={-2}
-            shadow-camera-left={-2}
+           //shadow-camera-top={2} shadow-camera-right={2} shadow-camera-bottom={-2} shadow-camera-left={-2}
             position={ [ 1, 2, 3 ] } 
             intensity={ 1.5 } 
         />
@@ -50,7 +55,7 @@ export default function Experience()
             <meshStandardMaterial color="mediumpurple" />
         </mesh>
 
-        <mesh receiveShadow position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
+        <mesh position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
             <planeGeometry />
             <meshStandardMaterial color="greenyellow" />
         </mesh>
