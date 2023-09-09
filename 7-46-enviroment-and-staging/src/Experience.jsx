@@ -3,10 +3,11 @@
 
 
 import { useFrame } from '@react-three/fiber'
-import { RandomizedLight, AccumulativeShadows, SoftShadows, BakeShadows, useHelper, OrbitControls } from '@react-three/drei'
+import { ContactShadows, RandomizedLight, AccumulativeShadows, SoftShadows, BakeShadows, useHelper, OrbitControls } from '@react-three/drei'
 import { useRef } from 'react'
 import { Perf } from 'r3f-perf'
 import * as THREE from 'three'
+import {useControls} from 'leva'
 
 export default function Experience()
 {
@@ -17,7 +18,17 @@ export default function Experience()
     
     useFrame((state, delta) =>
     {
-        cube.current.rotation.y += delta * 0.2
+         const time = state.clock.elapsedTime
+         cube.current.rotation.y += (delta * 0.2) * Math.tan(cube.current.position.y) * 5
+        // cube.current.position.x = 2 + Math.sin(time)
+        //cube.current.position.y = 1 + Math.cos(time)
+    })
+    
+    const {color, opacity, blur} = useControls('contact shadows', {
+        color: '#000000',
+        opacity: { value: 0.5, min: 0, max:1},
+        blur: { value: 1, min: 0, max:10}
+
     })
 
     return <>
@@ -29,9 +40,14 @@ export default function Experience()
         <Perf position="top-left" />
         <OrbitControls makeDefault />
 
-        <AccumulativeShadows position={[0, - 0.99, 0]} scale={10} > 
+        {/* accumlative shadows can artifact if "temporal" is on  */}
+
+        {/*
+        <AccumulativeShadows position={[0, - 0.99, 0]} scale={10} color='#316d39' opacity={0.8} frames={Infinity} temporal blend={100} > 
         <RandomizedLight position={ [1,2,3] } amount={8} radius={1} ambient={0.5} intensity={1} bias={0.001} />
-        </AccumulativeShadows>
+        </AccumulativeShadows>  */}
+
+        <ContactShadows position={ [0, -.99, 0] } scale={10} resolution={512} far={5} color="#ff0000" opacity={ .5 } blur={ .5 } />
 
         <directionalLight 
             ref={directionalLight} 
