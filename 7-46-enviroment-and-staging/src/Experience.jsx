@@ -3,7 +3,7 @@
 
 
 import { useFrame } from '@react-three/fiber'
-import { Sky, ContactShadows, RandomizedLight, AccumulativeShadows, SoftShadows, BakeShadows, useHelper, OrbitControls } from '@react-three/drei'
+import { Stage, Lightformer, Environment, Sky, ContactShadows, RandomizedLight, AccumulativeShadows, SoftShadows, BakeShadows, useHelper, OrbitControls } from '@react-three/drei'
 import { useRef } from 'react'
 import { Perf } from 'r3f-perf'
 import * as THREE from 'three'
@@ -33,13 +33,23 @@ export default function Experience()
     const { sunPosition } = useControls('sky', {
         sunPosition: {value: [1,2,3]}
     })
+    const {envMapIntensity, envMapHeight, envMapRadius, envMapScale} = useControls('environment map', {
+        envMapIntensity: {value: 1, min: 0, max: 12},
+        envMapHeight: {value: 7, min: 0, max: 100},
+        envMapRadius: {value: 28, min: 10, max: 1000},
+        envMapScale: {value: 100, min: 10, max: 1000}
+    })
+
+    
 
     return <>
+
+       {/* The environment code would be here */}
 
         {/* <BakeShadows/> */}
         {/*<SoftShadows frustum={3.75} size={50} near={9.5} samples={17} rings={11} /> */}
 
-        <color args={['red']}  attach="background"/>
+                            {/*<color args={['red']}  attach="background"/> */}
         <Perf position="top-left" />
         <OrbitControls makeDefault />
 
@@ -50,8 +60,8 @@ export default function Experience()
         <RandomizedLight position={ [1,2,3] } amount={8} radius={1} ambient={0.5} intensity={1} bias={0.001} />
         </AccumulativeShadows>  */}
 
-        <ContactShadows 
-        position={ [0, -.99, 0] } 
+        {/* <ContactShadows 
+        position={ [0, 0, 0] } 
         scale={10} 
         resolution={512} 
         far={5} 
@@ -59,7 +69,9 @@ export default function Experience()
         opacity={ opacity } 
         blur={ blur } 
         frames={1}// if scene is baked. do 1 frame
-        />
+        /> */}
+
+        {/* environment in drei adds envmap lighting and ambient lighting/ and skybox
 
         <directionalLight   
             ref={directionalLight} 
@@ -71,25 +83,52 @@ export default function Experience()
             position={ sunPosition } 
             intensity={ 1.5 } 
         />
+        */
+        }
+
+        {/*
         <ambientLight intensity={ 0.5 } />
+        */}
 
         {/* usually will use spherical coordinates then set to vec3 instead of the current use. end with setFromSpherical method (spherical is a mathmatical class in 3js)*/}
+        
+        {/*
         <Sky sunPosition={sunPosition}/>
+        */}
 
-        <mesh castShadow position-x={ - 2 }>
+        {/* <mesh castShadow position-y={1} position-x={ - 2 }>
             <sphereGeometry />
-            <meshStandardMaterial color="orange" />
-        </mesh>
+            <meshStandardMaterial color="orange" envMapIntensity={envMapIntensity} />
+        </mesh> */}
 
-        <mesh castShadow ref={ cube } position-x={ 2 } scale={ 1.5 }>
+        {/* <mesh castShadow position-y={1} ref={ cube } position-x={ 2 } scale={ 1.5 }>
             <boxGeometry />
-            <meshStandardMaterial color="mediumpurple" />
-        </mesh>
+            <meshStandardMaterial color="purple" envMapIntensity={envMapIntensity} />
+        </mesh> */}
 
-        <mesh position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
+        {/* <mesh position-y={ 0 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
             <planeGeometry />
-            <meshStandardMaterial color="greenyellow" />
+            <meshStandardMaterial color="greenyellow" envMapIntensity={envMapIntensity} />
+        </mesh> */}
+    <Stage
+    shadows={ {
+        type: 'contact',
+        opacity: 0.2,
+        blur: 3
+    }}
+    environment="sunset"
+    preset="portrait"
+    intensity={2}
+    >
+        <mesh castShadow position-y={1} position-x={ - 2 }>
+            <sphereGeometry />
+            <meshStandardMaterial color="orange" envMapIntensity={envMapIntensity} />
         </mesh>
 
+        <mesh castShadow position-y={1} ref={ cube } position-x={ 2 } scale={ 1.5 }>
+            <boxGeometry />
+            <meshStandardMaterial color="purple" envMapIntensity={envMapIntensity} />
+        </mesh>
+    </Stage>
     </>
 }
