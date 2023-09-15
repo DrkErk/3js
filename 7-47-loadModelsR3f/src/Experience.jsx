@@ -5,6 +5,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { Suspense } from 'react'
 import Model from './Model.jsx'
+import Placeholder from './Placeholder.jsx'
+import { Hamburger } from './Hamburger.jsx'
+import Fox from './Fox.jsx'
 
 export default function Experience()
 {
@@ -18,7 +21,7 @@ export default function Experience()
 
         <OrbitControls makeDefault />
 
-        <directionalLight castShadow position={ [ 1, 2, 3 ] } intensity={ 1.5 } />
+        <directionalLight castShadow position={ [ 1, 2, 3 ] } intensity={ 1.5 }  shadow-normalBias={0.04}/>
         <ambientLight intensity={ 0.5 } />
 
 
@@ -28,15 +31,11 @@ export default function Experience()
         </mesh>
 
     <Suspense 
-    fallback={ 
-        <mesh position-y={ 0.5 } scale={ [ 2, 3, 2 ] }>
-            <boxGeometry args={ [ 1, 1, 1, 2, 2, 2 ] } />
-            <meshBasicMaterial wireframe color="red" />
-        </mesh> }
-    >
-        <Model />
+    fallback={ <Placeholder position-y={ 0.5 } scale={ [ 2, 3, 2 ] } /> }>
+        <Hamburger scale={ 0.35 } />
     </Suspense>
 
+        <Fox></Fox>
 
     </>
 }
