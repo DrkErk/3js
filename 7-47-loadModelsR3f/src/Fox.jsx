@@ -1,7 +1,7 @@
 import { useAnimations, useGLTF } from "@react-three/drei"
 import { act } from "@react-three/fiber"
 import { useEffect } from "react"
-import { useControls } from 'leva'
+import { useControls } from "leva"
 
 export default function Fox()
 {
@@ -14,8 +14,8 @@ export default function Fox()
 
     useEffect(() =>
     {
-        const action = animations.actions(animationName)
-        action.fadeIn(0.5).play()
+        const action = animations.actions[animationName]
+        action.reset().fadeIn(0.5).play()
         
         return () =>
         {
