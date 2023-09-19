@@ -7,6 +7,7 @@ const root = ReactDOM.createRoot(document.querySelector('#root'))
 
 root.render(
     <Canvas
+        flat // setting flat on the canvas is the same as THREE.NoToneMapping
         camera={ {
             fov: 45,
             near: 0.1,
