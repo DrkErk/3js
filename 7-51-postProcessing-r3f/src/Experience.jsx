@@ -6,7 +6,7 @@
 
 import { OrbitControls } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { Bloom, Noise, Glitch, EffectComposer, Vignette } from '@react-three/postprocessing'
+import { Bloom, Noise, Glitch, EffectComposer, Vignette, DepthOfField } from '@react-three/postprocessing'
 import {GlitchMode, BlendFunction} from 'postprocessing'
 
 
@@ -14,7 +14,8 @@ export default function Experience()
 {
     return <>
 
-        <color arg={['#ffffff']} attach='background'/>
+        <color args={['#ffffff']} attach='background'/>
+        
         <EffectComposer>
               {/* <Vignette offset={0.3} darkness={0.9} blendFunction={BlendFunction.NORMAL}/>  */}
 
@@ -23,7 +24,10 @@ export default function Experience()
               {/* premultiply will multiply the noise with the input color before blending. leads to darker render blends better */}
               {/* <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT}/> */}
 
-              <Bloom />
+              {/* <Bloom  mipmapBlur intensity={0.5} luminanceThreshold={0}/> */}
+
+              {/* the depth of field distance is normalised between 0 and 1 */}
+              <DepthOfField focusDistance={0.025} focalLength={0.025} bokehScale={6} />
 
             
 
@@ -44,6 +48,8 @@ export default function Experience()
         <mesh castShadow position-x={ 2 } scale={ 1.5 }>
             <boxGeometry />
             <meshStandardMaterial color="mediumpurple" />
+            {/* <meshBasicMaterial color={[1.5, 1, 4]} toneMapped={false}/> glow on all sides */}
+            {/* <meshStandardMaterial color="#FFFFFF" emissive="orange" emissiveIntensity={2} toneMapped={false}/> this works for the side of the light */}
         </mesh>
 
         <mesh receiveShadow position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
