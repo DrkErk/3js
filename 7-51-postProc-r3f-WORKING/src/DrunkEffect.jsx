@@ -13,6 +13,7 @@ const fragmentShader = /* glsl */`
     uniform float amplitude;
     uniform float offset;
 
+    //inout means read and write
     void mainUv(inout vec2 uv)
     {
         uv.y += sin(uv.x * frequency + offset) * amplitude;
