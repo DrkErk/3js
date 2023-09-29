@@ -18,7 +18,7 @@
 
 import { OrbitControls } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { RigidBody, Physics } from '@react-three/rapier'
+import { CuboidCollider, debug, RigidBody, Physics } from '@react-three/rapier'
 
 export default function Experience()
 {
@@ -33,17 +33,33 @@ export default function Experience()
 
         <Physics debug>
 
-            <RigidBody>
-            <mesh castShadow position={ [ - 2, 2, 0 ] }>
+            <RigidBody colliders='ball'>
+            <mesh castShadow position={ [ 0, 4, 0 ] }>
                 <sphereGeometry />
                 <meshStandardMaterial color="orange" />
             </mesh>
             </RigidBody>
 
+            {/* <RigidBody>
             <mesh castShadow position={ [ 2, 2, 0 ] }>
-                <boxGeometry />
+                <boxGeometry args={[3,2,1]} />
                 <meshStandardMaterial color="mediumpurple" />
             </mesh>
+            <mesh castShadow position={ [ 2, 2, 3 ] }>
+                <boxGeometry args={[1,1,1]} />
+                <meshStandardMaterial color="mediumpurple" />
+            </mesh>
+            </RigidBody> */}
+
+                {/* hull is like an elastic membrane around an object. the hull should be a convex hull for the torus */}
+                {/* avoid trimesh with dynamic rigid bodies, trimesh colliders are hollow o nthe inside and makes collision detection more difficult and buggy */}
+            <RigidBody colliders={false} >
+            <CuboidCollider arg={[1,1,1]} />
+            <mesh castShadow position={ [ 0,1,0] } rotation={[ Math.PI * 0.5, 0, 0]}>
+                <torusGeometry args={[ 1, 0.5, 16, 32]} />
+                <meshStandardMaterial color="mediumpurple" />
+            </mesh> 
+            </RigidBody>
 
             <RigidBody type="fixed">
             <mesh receiveShadow position-y={ - 1.25 }>
