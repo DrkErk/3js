@@ -20,17 +20,30 @@ import { OrbitControls } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import {BallCollider, CuboidCollider, RigidBody, Physics } from '@react-three/rapier'
 import { useRef } from 'react'
+import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 
 export default function Experience()
 {
 
+    const twister = useRef()
     const cube = useRef()
 
     const cubeJump = () =>
     {
-        cube.current.applyImpulse({ x:0, y:5, z:0 })
+        const mass = cube.current.mass()
+        cube.current.applyImpulse({ x:0, y:5 * mass, z:0 })
         cube.current.applyTorqueImpulse({ x:Math.random() - 0.5 , y: Math.random() - 0.5 , z: Math.random() - 0.5 })
     }
+
+    useFrame((state) =>
+    {
+        const time = state.clock.getElapsedTime()
+
+        const eulerRotation = new THREE.Euler(0, time, 0)
+        const quaternionRotation = new THREE.Quaternion()
+        quaternionRotation.setFromEuler(eulerRotation)
+    })
 
     return <>
 
@@ -55,11 +68,12 @@ export default function Experience()
             {/* for bounciness, restitution, to get trampoline effect, you need rest of 2. custom manual colliders would need coefficentCombineRule and choice one of the provided rules*/}
             {/* https://rapier.rs/javascript3d/classes/RigidBody.html (more methods for the rigid body) (add force is long lasting, add impulse is short force) */}
             {/* mass doesnt increase fall speed. */}
-            <RigidBody ref={ cube } position={ [ 1.5, 2, 0 ] } gravityScale={ 1 } restitution={ 0 } friction={0.7} >
+            <RigidBody ref={ cube } position={ [ 1.5, 2, 0 ] } gravityScale={ 1 } restitution={ 0 } friction={0.7} colliders={false} >
             <mesh castShadow onClick={ cubeJump } >
                 <boxGeometry />
                 <meshStandardMaterial color="mediumpurple" />
             </mesh>
+            <CuboidCollider mass={ 2 } args={[ 0.5, 0.5, 0.5 ]}/>
             </RigidBody>
             
             {/* <RigidBody>
@@ -95,6 +109,12 @@ export default function Experience()
             </mesh>
             </RigidBody>
  
+            <RigidBody ref={twister} position={[ 0, - 0.8, 0]} friction={ 0 } type="kinematicPosition">
+            <mesh castShadow scale={[ 0.4, 0.4, 3]}>
+                <meshStandardMaterial color='red' />
+            </mesh>
+            </RigidBody>
+            
         </Physics>
 
     </>
