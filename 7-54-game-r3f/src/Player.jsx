@@ -1,4 +1,5 @@
 import { RigidBody } from "@react-three/rapier"
+import { KeyboardControls } from "@react-three/drei"
 
 export default function Player()
 {
