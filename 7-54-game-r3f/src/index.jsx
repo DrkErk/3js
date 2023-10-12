@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber'
 import Experience from './Experience.jsx'
 import { KeyboardControls} from '@react-three/drei'
 
+
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 
 root.render(
