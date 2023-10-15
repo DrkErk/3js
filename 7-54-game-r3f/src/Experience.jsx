@@ -16,7 +16,7 @@ export default function Experience()
 
         <OrbitControls makeDefault />
 
-        <Physics debug>
+        <Physics debug={false}>
         <Lights />
         <Level />
         <Player />
