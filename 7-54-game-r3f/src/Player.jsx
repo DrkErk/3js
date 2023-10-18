@@ -12,6 +12,10 @@ export default function Player()
     const {rapier, world} = useRapier()
     const rapierWorld = world
 
+    const [smoothedCameraPosition] = useState(() => new THREE.Vector3(10, 10, 10))
+    const [smoothedCameraTarget] = useState(() => new THREE.Vector3())
+
+
     const jump = () =>
     {
         const origin = body.current.translation()
@@ -20,8 +24,6 @@ export default function Player()
         const ray = new rapier.Ray(origin, direction)
         const hit = rapierWorld.castRay(ray, 10, true)
 
-        const [smoothedCameraPosition] = useState(() => new THREE.Vector3(10, 10, 10))
-        const [smoothedCameraTarget] = useState(() => new THREE.Vector3())
 
         if(hit.toi < 0.15)
         {
