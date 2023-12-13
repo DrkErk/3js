@@ -1,0 +1,14 @@
+-using the scaling/rotating/move keys, you can press x,y,z to only do it on that plane
+-when in edit mode 1:vertices 2:edges 3:faces
+-numpad "." focuses camera on the object that you have highlighted
+-after clicking a bunch of objects, press m to move to a collection
+-Crtl+r in edit mode while clicked on an obj allows for a loop cut (and right click allows for it to be centered)
+-adding an obj while in edit mode will group it to the main obj
+- edit mode and clicked on a face, press e to add extra
+- in edit mode and clicked on a part of an object, Press L to select all of the object
+- and as above, in edit mode and have a whole object selected. Press P to get to a seperate by menu
+- In edit mode on selected faces/edges, press I to set inset
+- alt + D to link duplicate an object
+- after clicking to change location/scale/rotation. SHIFT <axis you want to avoid> to change while ignore the axis you choose
+-f3 bisect
+-f3 repeat last
