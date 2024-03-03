@@ -93,11 +93,17 @@ gltfLoader.load(
 const smokeGeometry = new THREE.PlaneGeometry(1, 1, 16, 64)
 smokeGeometry.translate(0, 0.5, 0)
 smokeGeometry.scale(1.5, 6, 1.5)
+//Perlin Texture
+const perlinTexture = textureLoader.load('./perlin.png')
 //MATERIAL
 const smokeMaterial = new THREE.ShaderMaterial({
 vertexShader: coffeeSmokeVertexShader,
 fragmentShader: coffeeSmokeFragmentShader,
-side: THREE.DoubleSide
+uniforms:
+{
+    uPerlinTexture: new THREE.Uniform(perlinTexture)
+},
+side: THREE.DoubleSide,
 //wireframe: true
 })
 //MESH
