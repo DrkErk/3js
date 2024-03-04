@@ -101,9 +101,11 @@ vertexShader: coffeeSmokeVertexShader,
 fragmentShader: coffeeSmokeFragmentShader,
 uniforms:
 {
+    uTime: new THREE.Uniform(0),
     uPerlinTexture: new THREE.Uniform(perlinTexture)
 },
 side: THREE.DoubleSide,
+transparent: true
 //wireframe: true
 })
 //MESH
@@ -118,6 +120,10 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    //update smoke
+    smokeMaterial.uniforms.uTime.value = elapsedTime
+
 
     // Update controls
     controls.update()
