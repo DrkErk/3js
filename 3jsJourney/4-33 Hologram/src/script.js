@@ -1,3 +1,5 @@
+//
+//
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import GUI from 'lil-gui'
@@ -77,7 +79,7 @@ gui
 /**
  * Material
  */
-const material = new THREE.MeshBasicMaterial()
+const material = new THREE.ShaderMaterial()
 
 /**
  * Objects
