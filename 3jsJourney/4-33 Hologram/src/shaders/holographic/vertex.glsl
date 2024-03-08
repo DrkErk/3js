@@ -1,4 +1,5 @@
 
+varying vec3 vPosition;
 
 void main()
 {
@@ -7,6 +8,10 @@ void main()
 
     // final pos
     gl_Position = projectionMatrix * viewMatrix * modelPosition;
+
+    //varying
+    vPosition = modelPosition.xyz;// lines follow the viewmodel, vs position.xyz would be static lines 
+ 
 }
 
 

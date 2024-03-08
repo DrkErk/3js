@@ -5,6 +5,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import GUI from 'lil-gui'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
+import holographicVertexShader from './shaders/holographic/vertex.glsl'
+import holographicFragmentShader from './shaders/holographic/fragment.glsl'
+console.log(holographicFragmentShader)
+console.log(holographicVertexShader)
 /**
  * Base
  */
@@ -79,7 +83,10 @@ gui
 /**
  * Material
  */
-const material = new THREE.ShaderMaterial()
+const material = new THREE.ShaderMaterial({
+    vertexShader: holographicVertexShader,
+    fragmentShader: holographicFragmentShader,
+})
 
 /**
  * Objects
