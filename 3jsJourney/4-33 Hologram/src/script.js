@@ -90,6 +90,8 @@ const material = new THREE.ShaderMaterial({
         uTime: new THREE.Uniform(0),
     },
     transparent:true,
+    side: THREE.DoubleSide,
+    depthWrite: false, //to fix the weird line glitches in the objs
 })
 
 /**

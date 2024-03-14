@@ -8,7 +8,8 @@ void main()
 
 //normal 
 vec3 normal = normalize(vNormal); //because the fresnel isnt normalized (some of the vertexs will not be )
-
+if (!gl_FrontFacing)
+    normal *= - 1.0;
 //stripes
 float stripes = mod((vPosition.y + uTime * -0.02) * 20.0, 1.0 );
 stripes = pow(stripes, 3.0); //sharper curve, so darker to black and to pure white before reset
@@ -23,7 +24,7 @@ float holographic = stripes * fresnel;
 holographic += fresnel * 1.25;
 
 //final color
-gl_FragColor = vec4(1.0, 1.0, 1.0, fresnel);
+gl_FragColor = vec4(1.0, 1.0, 1.0, holographic);
 #include <tonemapping_fragment>
 #include <colorspace_fragment>
 
