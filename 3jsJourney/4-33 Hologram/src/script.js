@@ -83,16 +83,27 @@ gui
 /**
  * Material
  */
+const materialParameters = {}
+materialParameters.color = '#70c1ff'
+
+gui
+    .addColor(materialParameters, 'color')
+    .addChange(() => 
+    {
+        material.uniforms.uColor.value.set(materialParameters.color)
+    })
+
 const material = new THREE.ShaderMaterial({
     vertexShader: holographicVertexShader,
     fragmentShader: holographicFragmentShader,
     uniforms: {
         uTime: new THREE.Uniform(0),
+        uColor: new THREE.Uniform(new THREE.Color(materialParameters.color)),
     },
     transparent:true,
     side: THREE.DoubleSide,
     depthWrite: false, //to fix the weird line glitches in the objs
-    blending: THREE.AdditiveBlending, //adding light
+    blending: THREE.AdditiveBlending, //adding light like stars over stars and such
 })
 
 /**
