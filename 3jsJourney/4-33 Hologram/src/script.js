@@ -92,6 +92,7 @@ const material = new THREE.ShaderMaterial({
     transparent:true,
     side: THREE.DoubleSide,
     depthWrite: false, //to fix the weird line glitches in the objs
+    blending: THREE.AdditiveBlending, //adding light
 })
 
 /**
