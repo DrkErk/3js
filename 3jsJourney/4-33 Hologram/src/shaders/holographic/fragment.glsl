@@ -4,6 +4,7 @@ uniform vec3 uColor;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
+
 void main()
 {
 
