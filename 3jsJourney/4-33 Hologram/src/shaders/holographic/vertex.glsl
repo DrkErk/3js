@@ -5,11 +5,7 @@ varying vec3 vPosition;
 varying vec3 vNormal;
 
 
-float random2D(vec2 value)
-{
-    return fract(sin(dot(value.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-}
-
+#include ../includes/random2D.glsl
 
 void main()
 {
@@ -17,7 +13,13 @@ void main()
     vec4 modelPosition = modelMatrix * vec4(position, 1.0);
 
     //glitch
-    modelPosition.x += random2D(modelPosition.xz + uTime);
+    float glitchTime = uTime - modelPosition.y;
+    float glitchStrength = sin(glitchTime) + sin(glitchTime * 3.45) + sin(glitchTime * 8.76); // built in desmos to get a more random feel
+    glitchStrength /= 3.0; // reduce size of waves
+    glitchStrength = smoothstep(0.3, 1.0, glitchStrength); // if under .3 it is zero
+    glitchStrength *= 0.25; 
+    modelPosition.x += (random2D(modelPosition.xz + uTime) - 0.5) * glitchStrength; //rand2d always returns 0 - 1 so an offset is needed
+    modelPosition.z += (random2D(modelPosition.zx + uTime) - 0.5) * glitchStrength;
 
     // final pos
     gl_Position = projectionMatrix * viewMatrix * modelPosition;

@@ -88,7 +88,7 @@ materialParameters.color = '#70c1ff'
 
 gui
     .addColor(materialParameters, 'color')
-    .addChange(() => 
+    .onChange(() =>
     {
         material.uniforms.uColor.value.set(materialParameters.color)
     })
