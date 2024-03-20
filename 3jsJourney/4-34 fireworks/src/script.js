@@ -72,6 +72,28 @@ const test = new THREE.Mesh(
 scene.add(test)
 
 /**
+ * Fireworks
+ */
+const createFirework = (count) =>
+{
+    //geom
+    const positionsArray = new Float32Array(count * 3)
+
+    for(let i = 0; i < count; i++)
+    {
+        const i3 = i * 3;
+
+        positionsArray[i3    ] = Math.random()
+        positionsArray[i3 + 1] = Math.random()
+        positionsArray[i3 + 2] = Math.random()
+
+    }
+
+
+}
+
+createFirework(100)
+/**
  * Animate
  */
 const tick = () =>
