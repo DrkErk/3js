@@ -1,6 +1,9 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import GUI from 'lil-gui'
+import fireworkVertexShader from './shaders/firework/vertex.glsl'
+import fireworkFragmentShader from './shaders/firework/fragment.glsl'
+
 
 /**
  * Base
@@ -62,19 +65,19 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-/**
- * Test
- */
-const test = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial()
-)
-scene.add(test)
+// /**
+//  * Test
+//  */
+// const test = new THREE.Mesh(
+//     new THREE.BoxGeometry(1, 1, 1),
+//     new THREE.MeshBasicMaterial()
+// )
+// scene.add(test)
 
 /**
  * Fireworks
  */
-const createFirework = (count) =>
+const createFirework = (count, position) =>
 {
     //geom
     const positionsArray = new Float32Array(count * 3)
@@ -89,10 +92,25 @@ const createFirework = (count) =>
 
     }
 
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positionsArray, 3))
+
+    //material
+    const material = new THREE.ShaderMaterial({
+        vertexShader: fireworkVertexShader,
+        fragmentShader: fireworkFragmentShader,
+
+    })
+
+    //points
+    const firework = new THREE.Points(geometry, material)
+    firework.position.copy(position)
+    scene.add(firework)
 
 }
 
-createFirework(100)
+
+createFirework(100, new THREE.Vector3())
 /**
  * Animate
  */
