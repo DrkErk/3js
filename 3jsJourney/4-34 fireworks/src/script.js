@@ -35,7 +35,7 @@ window.addEventListener('resize', () =>
     // Update sizes
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
-    sizes.pixelRatio =
+    sizes.pixelRatio = Math.min(window.devicePixelRatio, 2)
     sizes.resolution.set(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio)
 
 
@@ -82,10 +82,23 @@ renderer.setPixelRatio(sizes.pixelRatio)
 /**
  * Fireworks
  */
-const createFirework = (count, position, size) =>
+const textures = [
+    textureLoader.load('./particles/1.png'),
+    textureLoader.load('./particles/2.png'),
+    textureLoader.load('./particles/3.png'),
+    textureLoader.load('./particles/4.png'),
+    textureLoader.load('./particles/5.png'),
+    textureLoader.load('./particles/6.png'),
+    textureLoader.load('./particles/7.png'),
+    textureLoader.load('./particles/8.png'),
+]
+
+
+const createFirework = (count, position, size, texture) =>
 {
     //geom
     const positionsArray = new Float32Array(count * 3)
+    const sizesArray = new Float32Array(count)
 
     for(let i = 0; i < count; i++)
     {
@@ -95,21 +108,28 @@ const createFirework = (count, position, size) =>
         positionsArray[i3 + 1] = Math.random()
         positionsArray[i3 + 2] = Math.random()
 
+        sizesArray[i] = Math.random()
     }
 
     const geometry = new THREE.BufferGeometry()
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positionsArray, 3))
+    geometry.setAttribute('aSize', new THREE.Float32BufferAttribute(sizesArray, 1)) // allows for randomness of size to be added to vertex
+    // shader as an attribute
 
     //material
+    texture.flipY = false
     const material = new THREE.ShaderMaterial({
         vertexShader: fireworkVertexShader,
         fragmentShader: fireworkFragmentShader,
         uniforms:
         {
             uSize: new THREE.Uniform(size),
-            uResolution: new THREE.Uniform(sizes.resolution)
+            uResolution: new THREE.Uniform(sizes.resolution),
+            uTexture: new THREE.Uniform(texture)
         },
-
+        transparent:true,
+        depthWrite: false, // gets rid of the weird depth issue where particles block each other
+        blending: THREE.AdditiveBlending,
     })
 
     //points
@@ -120,7 +140,9 @@ const createFirework = (count, position, size) =>
 }
 
 
-createFirework(100, new THREE.Vector3(), 50)
+createFirework(100, new THREE.Vector3(), 0.5, textures[7])
+
+
 /**
  * Animate
  */
