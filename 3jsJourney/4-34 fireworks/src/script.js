@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import GUI from 'lil-gui'
+import gsap from 'gsap'
 import fireworkVertexShader from './shaders/firework/vertex.glsl'
 import fireworkFragmentShader from './shaders/firework/fragment.glsl'
 
@@ -94,7 +95,7 @@ const textures = [
 ]
 
 
-const createFirework = (count, position, size, texture, radius) =>
+const createFirework = (count, position, size, texture, radius, color) =>
 {
     //geom
     const positionsArray = new Float32Array(count * 3)
@@ -138,7 +139,9 @@ const createFirework = (count, position, size, texture, radius) =>
         {
             uSize: new THREE.Uniform(size),
             uResolution: new THREE.Uniform(sizes.resolution),
-            uTexture: new THREE.Uniform(texture)
+            uTexture: new THREE.Uniform(texture),
+            uColor: new THREE.Uniform(color),
+            uProgress: new THREE.Uniform(0),
         },
         transparent:true,
         depthWrite: false, // gets rid of the weird depth issue where particles block each other
@@ -150,16 +153,46 @@ const createFirework = (count, position, size, texture, radius) =>
     firework.position.copy(position)
     scene.add(firework)
 
+    //destroy
+    const destroy = () =>
+    {
+        scene.remove(firework)
+        geometry.dispose()
+        material.dispose()
+    }
+
+    //GSAP animate
+    gsap.to(
+        material.uniforms.uProgress,
+        {value: 1, duration: 3, ease: 'linear', onComplete: destroy},
+    )
+
 }
 
 
-createFirework(
-    100,                  //count 
-    new THREE.Vector3(),  //Position
-    0.5,                  //Size
-    textures[7],          //Texture
-    1                     //Radius
-    )
+// createFirework(
+//     100,                        //count 
+//     new THREE.Vector3(),        //Position
+//     0.5,                        //Size
+//     textures[7],                //Texture
+//     1,                          //Radius
+//     new THREE.Color('#8affff'), // color
+    
+//     )
+
+window.addEventListener('click', () =>
+{
+    createFirework(
+        100,                        //count 
+        new THREE.Vector3(),        //Position
+        0.5,                        //Size
+        textures[7],                //Texture
+        1,                          //Radius
+        new THREE.Color('#8affff'), // color
+        
+        ) 
+}
+)
 
 
 /**
