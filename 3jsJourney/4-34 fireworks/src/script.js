@@ -94,7 +94,7 @@ const textures = [
 ]
 
 
-const createFirework = (count, position, size, texture) =>
+const createFirework = (count, position, size, texture, radius) =>
 {
     //geom
     const positionsArray = new Float32Array(count * 3)
@@ -102,12 +102,25 @@ const createFirework = (count, position, size, texture) =>
 
     for(let i = 0; i < count; i++)
     {
+        // Upgraded counter for the position array so it moves by 3
         const i3 = i * 3;
 
-        positionsArray[i3    ] = Math.random()
-        positionsArray[i3 + 1] = Math.random()
-        positionsArray[i3 + 2] = Math.random()
+        //spherical
+        const spherical = new THREE.Spherical(
+            radius * (0.75 + Math.random() * 0.25),
+            Math.random() * Math.PI,
+            Math.random() * Math.PI * 2
+        )
+        const position = new THREE.Vector3()
+        position.setFromSpherical(spherical) // sets spherical coords from `spherical` to vector 3 coords 
+        // Feed above into position of the particle array
 
+        //Position of the particles
+        positionsArray[i3    ] = position.x
+        positionsArray[i3 + 1] = position.y
+        positionsArray[i3 + 2] = position.z
+
+        //random size of the particles
         sizesArray[i] = Math.random()
     }
 
@@ -140,7 +153,13 @@ const createFirework = (count, position, size, texture) =>
 }
 
 
-createFirework(100, new THREE.Vector3(), 0.5, textures[7])
+createFirework(
+    100,                  //count 
+    new THREE.Vector3(),  //Position
+    0.5,                  //Size
+    textures[7],          //Texture
+    1                     //Radius
+    )
 
 
 /**
