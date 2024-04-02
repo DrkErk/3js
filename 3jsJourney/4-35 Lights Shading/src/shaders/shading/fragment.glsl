@@ -8,7 +8,13 @@ varying vec3 vNormal;
 
 vec3 directionalLight(vec3 lightColor, float lightIntensity, vec3 normal, vec3 lightPosition)
 {
-    return lightColor * lightIntensity;
+    vec3 lightDirection = normalize(lightPosition);
+
+    //shading
+    float shading = dot(normal, lightDirection);
+
+    //return lightColor * lightIntensity 
+    return vec3(shading);
 }
 
 void main()
