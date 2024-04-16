@@ -17,7 +17,7 @@ vec3 pointLight(vec3 lightColor, float lightIntensity, vec3 normal, vec3 lightPo
 {
 
     vec3 lightDirection = normalize(lightPosition);
-    vec3 lightReflection = reflect(- lightDirection, normal); //light direction is opposite, corrected with -
+    vec3 lightReflection = reflect(- lightDirection, normal); //light direction is opposite, corrected 0with -
 
     //shading
     float shading = dot(normal, lightDirection);
@@ -46,14 +46,23 @@ void main()
 
     vec3 light = vec3(0.0);
 
-    light += ambientLight( 
-        vec3(0.1, 0.1, 0.1), //light color
-        0.2);                // Light intensity
-    light += directionalLight( 
-        vec3(0.1, 0.1, 1.0),    // Light Color
+    // light += ambientLight( 
+    //     vec3(0.1, 0.1, 0.1), //light color
+    //     0.2);                // Light intensity
+    // light += directionalLight( 
+    //     vec3(0.1, 0.1, 1.0),    // Light Color
+    //     1.0,                    // Light Intensity
+    //     normal,                 // normal. vNormal can give interp issues
+    //     vec3(0.0, 0.0, 3.0),    // Light Position
+    //     viewDirection,          // view direction
+    //     20.0                    // Specular Power
+    //     );
+
+        light += directionalLight( 
+        vec3(1.0, 0.1, 0.1),    // Light Color
         1.0,                    // Light Intensity
         normal,                 // normal. vNormal can give interp issues
-        vec3(0.0, 0.0, 3.0),    // Light Position
+        vec3(0.0, 2.5, 0.0),    // Light Position
         viewDirection,          // view direction
         20.0                    // Specular Power
         );
