@@ -58,7 +58,7 @@ void main()
     //     20.0                    // Specular Power
     //     );
 
-        light += directionalLight( 
+        light += pointLight( 
         vec3(1.0, 0.1, 0.1),    // Light Color
         1.0,                    // Light Intensity
         normal,                 // normal. vNormal can give interp issues
