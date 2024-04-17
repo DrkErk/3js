@@ -13,10 +13,11 @@ varying vec3 vPosition;
 #include ../includes/ambientLight.glsl
 #include ../includes/directionalLight.glsl
 
-vec3 pointLight(vec3 lightColor, float lightIntensity, vec3 normal, vec3 lightPosition, vec3 viewDirection, float specularPower)
+vec3 pointLight(vec3 lightColor, float lightIntensity, vec3 normal, vec3 lightPosition, vec3 viewDirection, float specularPower, vec3 position, float lightDecay)
 {
-
-    vec3 lightDirection = normalize(lightPosition);
+    vec3 lightDelta = lightPosition - position;
+    float lightDistance = length(lightDelta);
+    vec3 lightDirection = normalize(lightDelta);
     vec3 lightReflection = reflect(- lightDirection, normal); //light direction is opposite, corrected 0with -
 
     //shading
@@ -29,12 +30,16 @@ vec3 pointLight(vec3 lightColor, float lightIntensity, vec3 normal, vec3 lightPo
     specular = max(0.0, specular); // fix for below
     specular = pow(specular, specularPower); // even powers has white behind, odd has black. This is an issue with the DOT giving negatives
 
+    //decay
+    float decay = 1.0 - lightDistance * lightDecay;
+    decay = max(0.0, decay);
+
     //return lightColor * lightIntensity ;
     //return lightColor * lightIntensity * shading;
     //return lightColor * lightIntensity * shading + specular; // will add a white light spec instead, although it looks good.
     //return lightColor * lightIntensity * shading + (lightColor * lightIntensity * specular); // BOTH ARE SEPERATE FACTORS BEING MULTI
                                                                                                // BY LIGHTCOLOR/INTENSITY, BELOW IS REFACTOR
-    return lightColor * lightIntensity * (shading + specular);
+    return lightColor * lightIntensity * decay * (shading + specular);
 
 }
 
@@ -46,25 +51,28 @@ void main()
 
     vec3 light = vec3(0.0);
 
-    // light += ambientLight( 
-    //     vec3(0.1, 0.1, 0.1), //light color
-    //     0.2);                // Light intensity
-    // light += directionalLight( 
-    //     vec3(0.1, 0.1, 1.0),    // Light Color
-    //     1.0,                    // Light Intensity
-    //     normal,                 // normal. vNormal can give interp issues
-    //     vec3(0.0, 0.0, 3.0),    // Light Position
-    //     viewDirection,          // view direction
-    //     20.0                    // Specular Power
-    //     );
+    light += ambientLight( 
+        vec3(0.1, 0.1, 0.1), //light color
+        0.2);                // Light intensity
+        
+    light += directionalLight( 
+        vec3(0.1, 0.1, 1.0),    // Light Color
+        1.0,                    // Light Intensity
+        normal,                 // normal. vNormal can give interp issues
+        vec3(0.0, 0.0, 3.0),    // Light Position
+        viewDirection,          // view direction
+        20.0                    // Specular Power
+        );
 
-        light += pointLight( 
+    light += pointLight( 
         vec3(1.0, 0.1, 0.1),    // Light Color
         1.0,                    // Light Intensity
         normal,                 // normal. vNormal can give interp issues
         vec3(0.0, 2.5, 0.0),    // Light Position
         viewDirection,          // view direction
-        20.0                    // Specular Power
+        20.0,                   // Specular Power
+        vPosition,              // position
+        0.25                    // light Decay
         );
 
     color *= light;
