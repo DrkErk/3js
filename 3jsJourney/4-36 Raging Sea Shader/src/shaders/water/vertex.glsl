@@ -26,7 +26,7 @@ vec3 fade(vec3 t)
     return t*t*t*(t*(t*6.0-15.0)+10.0);
 }
 
-float cnoise(vec3 P)
+float perlinClass3D(vec3 P)
 {
     vec3 Pi0 = floor(P); // Integer part for indexing
     vec3 Pi1 = Pi0 + vec3(1.0); // Integer part + 1
@@ -106,7 +106,7 @@ void main()
 
     for(float i = 1.0; i <= uSmallIterations; i++)
     {
-        elevation -= abs(cnoise(vec3(modelPosition.xz * uSmallWavesFrequency * i, uTime * uSmallWavesSpeed)) * uSmallWavesElevation / i);
+        elevation -= abs(perlinClass3D(vec3(modelPosition.xz * uSmallWavesFrequency * i, uTime * uSmallWavesSpeed)) * uSmallWavesElevation / i);
     }
     
     modelPosition.y += elevation;
