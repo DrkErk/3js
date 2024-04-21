@@ -42,13 +42,18 @@ void main()
     modelPositionA.y += waveElevation(modelPositionA);   
     modelPositionB.y += waveElevation(modelPositionB);
 
+    //compute normal
+    vec3 toA = normalize(modelPositionA - modelPosition.xyz); // NORMALIZE THE DIRECTIONS!!!
+    vec3 toB = normalize(modelPositionB - modelPosition.xyz); // NORMALIZE THE DIRECTIONS!!!
+    vec3 computeNormal = cross(toA, toB);
+
     //Final position
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 projectedPosition = projectionMatrix * viewPosition;
-    gl_Position = projectedPosition;
+    gl_Position = projectedPosition; 
 
     //varyings
     vElevation = elevation;
-    vNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
+    vNormal = computeNormal; //(modelMatrix * vec4(normal, 0.0)).xyz;
     vPosition = modelPosition.xyz;
 }
