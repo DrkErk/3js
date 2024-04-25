@@ -1,7 +1,12 @@
 uniform vec3 uColor;
+uniform vec2 uResolution;
 
 varying vec3 vNormal;
 varying vec3 vPosition;
+
+#include ../includes/ambientLight.glsl
+#include ../includes/directionalLight.glsl
+
 
 void main()
 {
@@ -9,8 +14,38 @@ void main()
     vec3 normal = normalize(vNormal);
     vec3 color = uColor;
 
+    // Lights
+    vec3 light = vec3(0.0);
+
+    light += ambientLight(
+        vec3(1.0),      // Light Color
+        1.0             // Light Intensity
+    );
+
+    light += directionalLight (
+        vec3(1.0, 1.0, 1.0),    // Light Color
+        1.0,                    // Light Intensity
+        normal,                 // Normal
+        vec3(1.0, 1.0, 0.0),    // Light Position
+        viewDirection,          // View Direction
+        1.0                     // Specular Power
+    );
+
+    color *= light;
+
+    // halftone
+    float repetitions = 10.0;
+
+    vec2 uv = gl_FragCoord.xy / uResolution.y; // uResolution.xy makes it the shape of the screen
+    uv *= repetitions;
+    uv = mod(uv, 1.0);
+
+    float point = distance(uv, vec2(0.5));
+    point = 1.0 - step(0.5, point);
+
+
     // Final color
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(point, point, point , 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
 }
