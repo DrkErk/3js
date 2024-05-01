@@ -22,6 +22,11 @@ const textureLoader = new THREE.TextureLoader()
 /**
  * Earth
  */
+// textures
+const earthDayTexture = textureLoader.load('./earth/day/.jpg')
+const earthNightTexture = textureLoader.load('./earth/night/.jpg')
+const earthSpecularCloudsTexture = textureLoader.load('./earth/specularClouds/.jpg')
+
 // Mesh
 const earthGeometry = new THREE.SphereGeometry(2, 64, 64)
 const earthMaterial = new THREE.ShaderMaterial({
