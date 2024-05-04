@@ -1,12 +1,30 @@
+uniform sampler2D uDayTexture;
+uniform sampler2D uNightTexture;
+uniform sampler2D uSpecularCloudsTextures;
+uniform vec3 uSunDirection;
+
+
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vPosition;
+
 
 void main()
 {
     vec3 viewDirection = normalize(vPosition - cameraPosition);
     vec3 normal = normalize(vNormal);
-    vec3 color = vec3(vUv, 1.0);
+    vec3 color = vec3(0.0);
+    
+    // Sun Direction
+    float sunOrientation = dot(uSunDirection, normal);
+
+    color = vec3(sunOrientation);
+
+    // day / night
+    float dayMix = smoothstep(-0.25, 0.5, sunOrientation); 
+    vec3 dayColor = texture(uDayTexture, vUv).rgb;
+    vec3 nightColor = texture(uNightTexture, vUv).rgb;
+     color = mix(nightColor, dayColor, dayMix);
 
     // Final color
     gl_FragColor = vec4(color, 1.0);
