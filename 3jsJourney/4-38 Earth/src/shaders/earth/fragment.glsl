@@ -45,6 +45,14 @@ void main()
 
     // Specular
     vec3 reflection = reflect(- uSunDirection, normal);
+    float specular = - dot(reflection, viewDirection);
+    specular = max(specular, 0.0);                                 //get the sun to reflect on earth
+    specular = pow(specular, 32.0);
+    specular *= specularCloudsColor.r;                            // no specular on land
+
+    vec3 specularColor = mix(vec3(1.0), atmosphereColor, fresnel); // color match sun reflection on edge of planet
+    color += specular * specularColor;
+
 
     // Final color
     gl_FragColor = vec4(color, 1.0);
