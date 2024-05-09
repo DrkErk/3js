@@ -67,6 +67,35 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(sizes.pixelRatio)
 
 /**
+ * Displacement OBJ
+ */
+const displacement = {}
+
+// 2D canvas 
+displacement.canvas = document.createElement('canvas')
+displacement.canvas.width = 128
+displacement.canvas.height = 128
+displacement.canvas.style.position = 'fixed'
+displacement.canvas.style.width = '512px'
+displacement.canvas.style.height = '512px'
+displacement.canvas.style.top = 0
+displacement.canvas.style.left = 0
+displacement.canvas.style.zIndex = 10
+document.body.append(displacement.canvas)
+//DOM ELEMENTS ^^^^^^^^^^^^
+
+
+// Context VVVVVV( Allows for drawing on the canvas)
+displacement.context = displacement.canvas.getContext('2d')
+    //displacement.context.fillStyle ='red' // is a property
+displacement.context.fillRect(0, 0, displacement.canvas.width, displacement.canvas.height)
+
+//Glow Image
+displacement.glowImage = new Image()
+displacement.glowImage.src = './glow.png'
+    //displacement.context.drawImage(displacement.glowImage, 20, 20, 32, 32)
+
+/**
  * Particles
  */
 const particlesGeometry = new THREE.PlaneGeometry(10, 10, 128, 128)
