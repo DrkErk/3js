@@ -76,8 +76,8 @@ displacement.canvas = document.createElement('canvas')
 displacement.canvas.width = 128
 displacement.canvas.height = 128
 displacement.canvas.style.position = 'fixed'
-displacement.canvas.style.width = '512px'
-displacement.canvas.style.height = '512px'
+displacement.canvas.style.width = '256px'
+displacement.canvas.style.height = '256px'
 displacement.canvas.style.top = 0
 displacement.canvas.style.left = 0
 displacement.canvas.style.zIndex = 10
@@ -94,6 +94,25 @@ displacement.context.fillRect(0, 0, displacement.canvas.width, displacement.canv
 displacement.glowImage = new Image()
 displacement.glowImage.src = './glow.png'
     //displacement.context.drawImage(displacement.glowImage, 20, 20, 32, 32)
+
+// interactive plane
+displacement.interactivePlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(10,10),
+    new THREE.MeshBasicMaterial({color: 'red'})
+)
+scene.add(displacement.interactivePlane)
+
+// raycaster
+displacement.rayCaster = new THREE.Raycaster()
+
+//coordinates
+displacement.screenCursor = new THREE.Vector2(9999,9999)
+displacement.canvasCursor = new THREE.Vector2(9999,9999)
+
+window.addEventListener('pointermove', (event) => {
+    displacement.screenCursor.x = (event.clientX / sizes.width) * 2 - 1
+    displacement.screenCursor.y = (event.clientY / sizes.height) * 2 - 1  // we want a range of -1 to +1
+})
 
 /**
  * Particles
@@ -119,6 +138,40 @@ const tick = () =>
 {
     // Update controls
     controls.update()
+    
+    /*
+    * Raycaster
+    */
+    displacement.rayCaster.setFromCamera(displacement.screenCursor, camera)
+    const intersections = displacement.rayCaster.intersectObject(displacement.interactivePlane)
+    
+    if(intersections.length)
+    {
+        const uv = intersections[0].uv
+
+        displacement.canvasCursor.x = uv.x * displacement.canvas.width
+       // displacement.canvasCursor.y = uv.y * displacement.canvas.height // Y is inverted correct is below
+       displacement.canvasCursor.y = (1 - uv.y) * displacement.canvas.height
+    }
+
+    /**
+     * displacement
+     */
+    //fadeout
+    displacement.context.globalCompositeOperation = 'source-over'
+    displacement.context.globalAlpha = 0.1
+    displacement.context.fillRect(0,0,displacement.canvas.width, displacement.canvas.height)
+
+    //draw glow
+    const glowSize = displacement.canvas.width * 0.25
+    displacement.context.globalCompositeOperation = 'lighten' //like 3js additive blending
+    displacement.context.drawImage(
+        displacement.glowImage,
+        displacement.canvasCursor.x - glowSize * 0.5,
+        displacement.canvasCursor.y - glowSize * 0.5,
+        glowSize,
+        glowSize
+    )
 
     // Render
     renderer.render(scene, camera)
