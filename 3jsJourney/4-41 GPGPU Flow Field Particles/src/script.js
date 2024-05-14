@@ -18,6 +18,7 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import GUI from 'lil-gui'
 import particlesVertexShader from './shaders/particles/vertex.glsl'
 import particlesFragmentShader from './shaders/particles/fragment.glsl'
+import gpgpuParticlesShader from './shaders/gpgpu/particles.glsl'
 import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js'
 
 
@@ -113,6 +114,34 @@ gpgpu.computation = new GPUComputationRenderer(gpgpu.size, gpgpu.size, renderer)
 //(below) creates an datatexture that works like other texture, but pixel data is set up as an array (found in baseparticletexture.image.data)
 const baseParticlesTexture = gpgpu.computation.createTexture()
 
+for(let i = 0; i < baseGeometry.count; i++)
+    {
+        const i3 = i*3 //for baseGeometry.instance.attributes.position.array go 3x3, xyz
+        const i4 = i*4 //for baseParticlesTexture.image.data go 4x4, rgba
+
+        
+    }
+
+// particles variable
+gpgpu.particlesVariable = gpgpu.computation.addVariable('uParticles', gpgpuParticlesShader, baseParticlesTexture)
+//^^^ uParticles is the name of the `baseParticlesTexture` in the gpgpuParticleShader
+gpgpu.computation.setVariableDependencies(gpgpu.particlesVariable, [gpgpu.particlesVariable])
+
+// init
+gpgpu.computation.init()
+
+//debug 
+gpgpu.debug = new THREE.Mesh(
+    new THREE.PlaneGeometry(3, 3),
+    new THREE.MeshBasicMaterial({
+        map: gpgpu.computation.getCurrentRenderTarget(gpgpu.particlesVariable).texture
+    })
+)
+gpgpu.debug.position.x = 3
+scene.add(gpgpu.debug)
+
+
+
 /**
  * Particles
  */
@@ -153,6 +182,8 @@ const tick = () =>
     
     // Update controls
     controls.update()
+
+    gpgpu.computation.compute()
 
     // Render normal scene
     renderer.render(scene, camera)
