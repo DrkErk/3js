@@ -15,11 +15,11 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
+import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js'
 import GUI from 'lil-gui'
 import particlesVertexShader from './shaders/particles/vertex.glsl'
 import particlesFragmentShader from './shaders/particles/fragment.glsl'
 import gpgpuParticlesShader from './shaders/gpgpu/particles.glsl'
-import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js'
 
 
 /**
@@ -96,10 +96,18 @@ debugObject.clearColor = '#29191f'
 renderer.setClearColor(debugObject.clearColor)
 
 /**
+ * Load Model
+ */
+const gltf = await gltfLoader.loadAsync('./model.glb') // this wouldn't work with vite because vite wants to make it compatiable w/most browsers
+// We did stuff in the vite config to get it to work. check there.
+// DRAWBACK: if the model takes time to load, the code will be stuck for a while.
+
+
+/**
  * Base geometry
  */
 const baseGeometry = {} //gpgpu needs to be insatiated away from all
-baseGeometry.instance = new THREE.SphereGeometry(3)
+baseGeometry.instance = gltf.scene.children[0].geometry
 baseGeometry.count = baseGeometry.instance.attributes.position.count //counts the total points in obj 
 
 /**
@@ -119,7 +127,11 @@ for(let i = 0; i < baseGeometry.count; i++)
         const i3 = i*3 //for baseGeometry.instance.attributes.position.array go 3x3, xyz
         const i4 = i*4 //for baseParticlesTexture.image.data go 4x4, rgba
 
-        
+        baseParticlesTexture.image.data[i4 + 0] = baseGeometry.instance.attributes.position.array[i3 + 0]
+        baseParticlesTexture.image.data[i4 + 1] = baseGeometry.instance.attributes.position.array[i3 + 1]
+        baseParticlesTexture.image.data[i4 + 2] = baseGeometry.instance.attributes.position.array[i3 + 2]
+        baseParticlesTexture.image.data[i4 + 3] = 0
+
     }
 
 // particles variable
@@ -147,6 +159,28 @@ scene.add(gpgpu.debug)
  */
 const particles = {}
 
+// Geometery
+const particlesUvArray = new Float32Array(baseGeometry.count * 2)
+
+for(let y = 0; y < gpgpu.size; y++)
+    {
+        for(let x = 0; x < gpgpu.size; x++)
+            {
+                const i = (y * gpgpu.size) + x //gets the total size of the material
+                const i2 = i * 2
+
+                const uvX = (x + 0.5) / gpgpu.size //resize to normalize 0 to 1. +0.5 to get center of pixel
+                const uvY = (y + 0.5) / gpgpu.size //resize to normalize 0 to 1. +0.5 to get center of pixel
+
+                particlesUvArray[i2 + 0] = uvX
+                particlesUvArray[i2 + 1] = uvY
+            }
+    }
+
+particles.geometery =  new THREE.BufferGeometry()
+particles.geometery.setDrawRange(0, baseGeometry.count)
+particles.geometery.setAttribute('aParticlesUv', new THREE.BufferAttribute(particlesUvArray, 2))
+
 // Material
 particles.material = new THREE.ShaderMaterial({
     vertexShader: particlesVertexShader,
@@ -154,12 +188,13 @@ particles.material = new THREE.ShaderMaterial({
     uniforms:
     {
         uSize: new THREE.Uniform(0.4),
-        uResolution: new THREE.Uniform(new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio))
+        uResolution: new THREE.Uniform(new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio)),
+        uParticlesTexture: new THREE.Uniform()
     }
 })
 
 // Points
-particles.points = new THREE.Points(baseGeometry.instance, particles.material)
+particles.points = new THREE.Points(particles.geometery, particles.material)
 scene.add(particles.points)
 
 /**
@@ -184,6 +219,7 @@ const tick = () =>
     controls.update()
 
     gpgpu.computation.compute()
+    particles.material.uniforms.uParticlesTexture.value = gpgpu.computation.getCurrentRenderTarget(gpgpu.particlesVariable).texture
 
     // Render normal scene
     renderer.render(scene, camera)
