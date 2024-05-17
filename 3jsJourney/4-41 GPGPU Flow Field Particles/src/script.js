@@ -20,6 +20,7 @@ import GUI from 'lil-gui'
 import particlesVertexShader from './shaders/particles/vertex.glsl'
 import particlesFragmentShader from './shaders/particles/fragment.glsl'
 import gpgpuParticlesShader from './shaders/gpgpu/particles.glsl'
+import { float } from 'three/examples/jsm/nodes/Nodes.js'
 
 
 /**
@@ -161,6 +162,7 @@ const particles = {}
 
 // Geometery
 const particlesUvArray = new Float32Array(baseGeometry.count * 2)
+const sizesArray = new Float32Array(baseGeometry.count)
 
 for(let y = 0; y < gpgpu.size; y++)
     {
@@ -168,18 +170,24 @@ for(let y = 0; y < gpgpu.size; y++)
             {
                 const i = (y * gpgpu.size) + x //gets the total size of the material
                 const i2 = i * 2
-
+                
+                //particles uv
                 const uvX = (x + 0.5) / gpgpu.size //resize to normalize 0 to 1. +0.5 to get center of pixel
                 const uvY = (y + 0.5) / gpgpu.size //resize to normalize 0 to 1. +0.5 to get center of pixel
 
                 particlesUvArray[i2 + 0] = uvX
                 particlesUvArray[i2 + 1] = uvY
+                
+                // sizes
+                sizesArray[i] = Math.random()
             }
     }
 
 particles.geometery =  new THREE.BufferGeometry()
 particles.geometery.setDrawRange(0, baseGeometry.count)
 particles.geometery.setAttribute('aParticlesUv', new THREE.BufferAttribute(particlesUvArray, 2))
+particles.geometery.setAttribute('aColor', baseGeometry.instance.attributes.color)
+particles.geometery.setAttribute('aSize', new THREE.BufferAttribute(sizesArray, 1))
 
 // Material
 particles.material = new THREE.ShaderMaterial({
@@ -187,7 +195,7 @@ particles.material = new THREE.ShaderMaterial({
     fragmentShader: particlesFragmentShader,
     uniforms:
     {
-        uSize: new THREE.Uniform(0.4),
+        uSize: new THREE.Uniform(0.04),
         uResolution: new THREE.Uniform(new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio)),
         uParticlesTexture: new THREE.Uniform()
     }
