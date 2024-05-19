@@ -137,8 +137,11 @@ for(let i = 0; i < baseGeometry.count; i++)
 
 // particles variable
 gpgpu.particlesVariable = gpgpu.computation.addVariable('uParticles', gpgpuParticlesShader, baseParticlesTexture)
-//^^^ uParticles is the name of the `baseParticlesTexture` in the gpgpuParticleShader
+    //^^^ uParticles is the name of the `baseParticlesTexture` in the gpgpuParticleShader
 gpgpu.computation.setVariableDependencies(gpgpu.particlesVariable, [gpgpu.particlesVariable])
+
+//uniforms
+gpgpu.particlesVariable.material.uniforms.uTime = new THREE.Uniform(0)
 
 // init
 gpgpu.computation.init()
@@ -226,6 +229,8 @@ const tick = () =>
     // Update controls
     controls.update()
 
+    //gpgpu update
+    gpgpu.particlesVariable.material.uniforms.uTime.value = elapsedTime
     gpgpu.computation.compute()
     particles.material.uniforms.uParticlesTexture.value = gpgpu.computation.getCurrentRenderTarget(gpgpu.particlesVariable).texture
 
