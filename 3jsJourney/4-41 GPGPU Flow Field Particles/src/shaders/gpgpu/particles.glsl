@@ -7,6 +7,7 @@ uniform float uDeltaTime;
 uniform sampler2D uBase;
 uniform float uFlowFieldInfluence;
 uniform float uFlowFieldStrength;
+uniform float uFlowFieldFrequency;
 
 void main()
 {
@@ -32,9 +33,9 @@ strength = smoothstep(influence, 1.0, strength); // will make it so that some pa
 
 //flow field
 vec3 flowField = vec3(
-    simplexNoise4d(vec4(particle.xyz + 0.0, time)),
-    simplexNoise4d(vec4(particle.xyz + 1.0, time)),
-    simplexNoise4d(vec4(particle.xyz + 2.0, time))
+    simplexNoise4d(vec4(particle.xyz * uFlowFieldFrequency + 0.0, time)),
+    simplexNoise4d(vec4(particle.xyz * uFlowFieldFrequency + 1.0, time)),
+    simplexNoise4d(vec4(particle.xyz * uFlowFieldFrequency + 2.0, time))
 );
 flowField = normalize(flowField);
 particle.xyz += flowField * uDeltaTime * strength * uFlowFieldStrength; //How often you apply flowfield 
