@@ -4,16 +4,21 @@
 
 //varying vec2 vUv;
 
-#include ../includes/simplexNoise4d.glsl
+uniform float uTime;
+uniform float uPositionFrequency;
+uniform float uTimeFrequency;
+uniform float uStrength;
 
 attribute vec4 tangent; // made from the geometery compute tangents
+
+#include ../includes/simplexNoise4d.glsl
 
 float getWobble(vec3 position)
 {
     return simplexNoise4d(vec4(
-    position,   //xyz
-    0.0         // w
-));
+    position * uPositionFrequency,   //xyz
+    uTime * uTimeFrequency                           // w
+)) * uStrength;
 }
 
 void main()
