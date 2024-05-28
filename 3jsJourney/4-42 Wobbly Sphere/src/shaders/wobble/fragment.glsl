@@ -1,6 +1,8 @@
 
 varying vec2 vUv;
 
+varying float vWobble;
+
 void main()
 {
 //csm_DiffuseColor.rgb = vec3(vUv, 0.5);
