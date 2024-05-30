@@ -38,7 +38,7 @@ void main()
     vec3 biTangent = cross(normal, tangent.xyz);
 
     // neighbor positions
-    float shift = 0.01;
+    float shift = 0.1;
     vec3 positionA = csm_Position + tangent.xyz * shift;
     vec3 positionB = csm_Position + biTangent  * shift;    
 
