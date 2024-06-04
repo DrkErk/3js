@@ -14,6 +14,8 @@ angle = mod(angle, PI2); // PI * 2 (ALSO using MOD negative will have diff behav
 if(angle > 0.0 && angle < uSliceArc)
     discard;
     
+float csm_Slice;
+
 }
 
 
