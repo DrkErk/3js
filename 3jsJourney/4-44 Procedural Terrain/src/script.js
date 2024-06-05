@@ -1,7 +1,18 @@
+/**
+ * npm install three-bvh-csg@0.0.16
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 import GUI from 'lil-gui'
+import { Brush } from 'three-bvh-csg'
 
 /**
  * Base
@@ -39,6 +50,12 @@ const placeholder = new THREE.Mesh(
     new THREE.MeshPhysicalMaterial()
 )
 scene.add(placeholder)
+
+/**
+ * Board
+ */
+const boardFill = new Brush(new THREE.BoxGeometry(11, 2, 11))
+const boardHole = new Brush(new THREE.BoxGeometry(10, 2.1, 10))
 
 /**
  * Lights
