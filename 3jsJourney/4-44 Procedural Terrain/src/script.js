@@ -12,7 +12,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 import GUI from 'lil-gui'
-import { Brush } from 'three-bvh-csg'
+import { SUBTRACTION, Brush, Evaluator } from 'three-bvh-csg'
 
 /**
  * Base
@@ -54,8 +54,13 @@ scene.add(placeholder)
 /**
  * Board
  */
+//brushes
 const boardFill = new Brush(new THREE.BoxGeometry(11, 2, 11))
 const boardHole = new Brush(new THREE.BoxGeometry(10, 2.1, 10))
+
+//evaluate
+const evaluator = new Evaluator()
+const board = evaluator.evaluate(boardFill, boardHole, SUBTRACTION)
 
 /**
  * Lights
