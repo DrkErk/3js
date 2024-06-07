@@ -43,13 +43,12 @@ rgbeLoader.load('/spruit_sunrise.hdr', (environmentMap) =>
 })
 
 /**
- * Placeholder
+ * Terrain
  */
-const placeholder = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(2, 5),
-    new THREE.MeshPhysicalMaterial()
-)
-scene.add(placeholder)
+
+
+
+
 
 /**
  * Board
@@ -58,9 +57,21 @@ scene.add(placeholder)
 const boardFill = new Brush(new THREE.BoxGeometry(11, 2, 11))
 const boardHole = new Brush(new THREE.BoxGeometry(10, 2.1, 10))
 
+// boardHole.position.y = 0.2
+// boardHole.updateMatrixWorld() //update the hole since you need to update after every move. 
+
+// grouped materials, one for outside color and one for inside material
+// boardFill.material.color.set('red')
+// boardHole.material = new THREE.MeshNormalMaterial()
+
 //evaluate
 const evaluator = new Evaluator()
 const board = evaluator.evaluate(boardFill, boardHole, SUBTRACTION)
+board.geometry.clearGroups() // board 2 separate groups where one would be the colors above
+board.material = new THREE.MeshStandardMaterial({ color: '#ffffff', metalness: 0, roughness:0.3, })
+board.castShadow = true
+board.receiveShadow = true
+scene.add(board)
 
 /**
  * Lights
