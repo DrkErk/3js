@@ -55,6 +55,13 @@ geometry.deleteAttribute('normal')  // after we bring them to the vertex shader
 geometry.rotateX(- Math.PI * 0.5)
 
 // Material
+const uniforms = {
+    uPostionFrequency: new THREE.Uniform(0.2) ,
+    uStrength: new THREE.Uniform(2.0) ,
+    uWarpFrequency: new THREE.Uniform(5) ,
+    uWarpStrength: new THREE.Uniform(0.5) ,
+}
+
 const material = new CustomShaderMaterial({
     //CSM
     baseMaterial: THREE.MeshStandardMaterial,
