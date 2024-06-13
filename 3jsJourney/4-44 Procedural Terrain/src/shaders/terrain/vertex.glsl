@@ -1,15 +1,18 @@
+uniform float uPositionFrequency;
+uniform float uStrength;
+uniform float uWarpFrequency;
+uniform float uWarpStrength;
+uniform float uTime;
+
 
 #include ../includes/simplexNoise2d.glsl
 
 float getElevation(vec2 position)
 {
-    float uPositionFrequency = 0.2;
-    float uStrength = 2.0;
-    float uWarpFrequency = 5.0;
-    float uWarpStrength = 0.5;
 
     //adding the smaller details into the waves
     vec2 warpedPosition = position;
+    warpedPosition += uTime * 0.2;
     warpedPosition += simplexNoise2d(warpedPosition * uPositionFrequency * uWarpFrequency) * uWarpStrength;
 
     // adding the smaller waves into the terrain
@@ -30,8 +33,8 @@ void main()
 
 // neighbors pos
 float shift = 0.01;
-vec3 positionA = position + vec3(shift, 0.0, 0.0);
-vec3 positionB = position + vec3(0.0, 0.0, - shift);
+vec3 positionA = position.xyz + vec3(shift, 0.0, 0.0);
+vec3 positionB = position.xyz + vec3(0.0, 0.0, - shift);
 
 // elevation
 float elevation = getElevation(csm_Position.xz);

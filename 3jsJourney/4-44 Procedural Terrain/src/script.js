@@ -56,23 +56,43 @@ geometry.rotateX(- Math.PI * 0.5)
 
 // Material
 const uniforms = {
-    uPostionFrequency: new THREE.Uniform(0.2) ,
+    uTime: new THREE.Uniform(0),
+    uPositionFrequency: new THREE.Uniform(0.2) ,
     uStrength: new THREE.Uniform(2.0) ,
     uWarpFrequency: new THREE.Uniform(5) ,
     uWarpStrength: new THREE.Uniform(0.5) ,
 }
+
+gui.add(uniforms.uPositionFrequency, 'value', 0, 1, 0.001).name('uPositionFrequency')
+gui.add(uniforms.uStrength, 'value', 0, 10, 0.001).name('uStrength')
+gui.add(uniforms.uWarpFrequency, 'value', 0, 10, 0.001).name('uWarpFrequency')
+gui.add(uniforms.uWarpStrength, 'value', 0, 1, 0.001).name('uWarpStrength')
 
 const material = new CustomShaderMaterial({
     //CSM
     baseMaterial: THREE.MeshStandardMaterial,
     fragmentShader: terrainFragmentShader,
     vertexShader: terrainVertexShader,
-    silent: true,
+    uniforms: uniforms,
+    silent: true,   
 
     //mesh standard material
     metalness: 0,
     roughness: 0.5,
     color: '#85d534'
+
+})
+
+const depthMaterial = new CustomShaderMaterial({
+    //CSM
+    baseMaterial: THREE.MeshDepthMaterial,
+    fragmentShader: terrainFragmentShader,
+    vertexShader: terrainVertexShader,
+    uniforms: uniforms,
+    silent: true,   
+
+    //mesh depth material
+    depthPacking: THREE.RGBADepthPacking
 
 })
 
@@ -180,6 +200,9 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    //uniforms
+    uniforms.uTime.value = elapsedTime
 
     // Update controls
     controls.update()
