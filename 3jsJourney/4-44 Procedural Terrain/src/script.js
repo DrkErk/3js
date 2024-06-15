@@ -1,7 +1,7 @@
 /**
  * npm install three-bvh-csg@0.0.16
  * 
- * 
+ * 3planner/ tree planner???
  * 
  * 
  * 
@@ -121,6 +121,20 @@ terrain.customDepthMaterial = depthMaterial
 terrain.receiveShadow = true
 terrain.castShadow = true
 scene.add(terrain)
+
+/**
+ * water
+ */
+const water = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10, 1, 1,),
+    new THREE.MeshPhysicalMaterial({
+        transmission: 1,
+        roughness: 0.15,
+    })
+)
+water.rotation.x = - Math.PI * 0.5
+water.position.y = - 0.1
+scene.add(water)
 
 
 /**

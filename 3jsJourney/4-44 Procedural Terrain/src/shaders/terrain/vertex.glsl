@@ -1,3 +1,7 @@
+// Remember, the more you can do in the vertex, the more performant your project will be.
+// ^- unless there are too many vertices, then their will be visual artifacts.
+//
+
 uniform float uPositionFrequency;
 uniform float uStrength;
 uniform float uWarpFrequency;
@@ -5,6 +9,7 @@ uniform float uWarpStrength;
 uniform float uTime;
 
 varying vec3 vPosition;
+varying float vUpDot;
 
 #include ../includes/simplexNoise2d.glsl
 
@@ -51,6 +56,10 @@ csm_Normal = cross(toA, toB);
 
 // varying
 vPosition = csm_Position;
+vPosition.xz += uTime * 0.2; // added to stop the visual of the moving snow. it now moves at the sae speed as the warp position
+
+vUpDot = dot(csm_Normal, vec3(0.0, 1.0, 0.0));
+
 
 }
 
