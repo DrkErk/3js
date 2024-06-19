@@ -1,0 +1,9 @@
+----------------------------------
+--------------Uniforms------------
+- mix(a, b, t) : linearly interpolates between a and b using t as a percentage
+^- can also be written as (return a + t * (b - a); )
+
+
+
+
+
