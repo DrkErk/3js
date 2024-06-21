@@ -1,0 +1,44 @@
+Addressing Modes:
+    -How are the texture coords outside the range [0,1] treated:
+        -clampToEdge: (default)
+            -in the main.js:
+                texture.wrapS = THREE.ClampToEdgeWrapping; (u, x)
+                texture.wrapT = THREE.ClampToEdgeWrapping; (v, y)
+        -Repeat
+            -in the main.js:
+                texture.wrapS = THREE.RepeatWrapping; (u, x)
+                texture.wrapT = THREE.RepeatWrapping; (v, y)
+        -MirroredRepeat
+            -in the main.js:
+                texture.wrapS = THREE.MirroredRepeatWrapping; (u, x)
+                texture.wrapT = THREE.MirroredRepeatWrapping; (v, y)
+
+Filtering:
+
+
+From the fragment shader:
+    -Properly mix and overlay the two textures
+     gl_FragColor = mix(sampleDiffuse, overlayTexture, overlayTexture.w)
+  
+    -gl_FragColor = sampleDiffuse * tint; // is multiplicitive blending, looks like you just separated out the red channel
+     (also called modulation) (is done component wise)
+     which would look like this
+     gl_FragColor = vec4(sampleDiffuse, 0.0, 0.0, 1.0);
+  
+    -You can tint the main texture by the new texture ie
+     gl_FragColor = sampleDiffuse * overlay;
+
+    -Flipping the texture
+     vec4 sampleDiffuse = texture2D(diffuse, vec2(vUv.x, 1.0 - vUv.y));
+
+
+
+
+
+
+
+
+
+
+
+

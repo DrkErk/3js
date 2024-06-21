@@ -38,6 +38,7 @@ class SimonDevGLSLCourse {
     dogTexture.wrapS = THREE.RepeatWrapping;
     dogTexture.wrapT = THREE.RepeatWrapping;
     dogTexture.magFilter = THREE.NearestFilter;
+    
     const overlayTexture = loader.load('./textures/overlay.png');
 
     const geometry = new THREE.PlaneGeometry(1, 1);
