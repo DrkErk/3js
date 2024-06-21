@@ -14,6 +14,11 @@ Addressing Modes:
                 texture.wrapT = THREE.MirroredRepeatWrapping; (v, y)
 
 Filtering:
+    - Mag filter:
+        ^ magification filter. (Grab the nearest pixel and display) (Makes img look very pixely)
+    -Linear Filter: (grabs 4 nearest texels and blends them together)
+
+^^^ Bilinear code sample:
 
 
 From the fragment shader:
