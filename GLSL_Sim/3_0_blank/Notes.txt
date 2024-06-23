@@ -13,13 +13,32 @@ Addressing Modes:
                 texture.wrapS = THREE.MirroredRepeatWrapping; (u, x)
                 texture.wrapT = THREE.MirroredRepeatWrapping; (v, y)
 
+
 Filtering:
     - Mag filter:
         ^ magification filter. (Grab the nearest pixel and display) (Makes img look very pixely)
-    -Linear Filter: (grabs 4 nearest texels and blends them together)
+    -Linear Filter: (grabs 4 nearest texels and blends them together) 
+        ^^^ Bilinear code sample:
+            vec4 bilinear(sampler2d tex, vec2 uv, vec2 textureSize)
+            {
+                vec2 pos = floor(uv * textureSize - 0.5) + 0.5;
+                vec4 p11 = texture2D(tex, pos / textureSize);
+                vec4 p21 = texture2D(tex, (pos + vec2(1.0, 0.0)) / textureSize);
+                vec4 p12 = texture2D(tex, (pos + vec2(0.0, 1.0)) / textureSize);
+                vec4 p22 = texture2D(tex, (pos + vec2(1.0, 1.0)) / textureSize);
 
-^^^ Bilinear code sample:
+                vec2 f = fract(uv * textureSize - 0.5);
+                vec4 px1 = mix(p11, p21, f.x);
+                vec4 px2 = mix(p12, p22, f.x);
+                return mix(px1, px2, f.y);
+            }
+    -MipMap (for when you zoom out) (mipmap chain)
+        - Creates many textures where each is half the size of the last, gpu can choose to read from a smaller img than the last
+        - that means you can choose nearest/ Linear Filtering while sampling
+        - (to use or not to use mipmaps) if you use them, sample from either, 
+          nearest mipmap level or 2 nearest mip maps from upper and lower levels, and blend them
 
+        -TriLinear filtering: bilinear samples with 2 nearest mipmap levels and blending together. (means 8 texels are read)
 
 From the fragment shader:
     -Properly mix and overlay the two textures
