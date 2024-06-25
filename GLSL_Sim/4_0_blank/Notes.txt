@@ -1,0 +1,68 @@
+// CODE SNIPPETS IN THE FRAGMENT
+
+    Step function
+        - step(edge, x)
+        - gens a step func by comparing x to edge
+        - ex: if(x < edge) return 0.0;
+              return 1.0;
+    
+    Mix function
+        - mix(a, b, t) 
+        - linearly interpolates between a,b using t as the percentage
+        - ex: return a + t * (b - a);
+        - Lerp and mix can be used as the same things
+
+    Smoothstep function
+        - Smoothstep(edge1, edge2, x)
+        - returns a smooth `Hermite interpolation` between 0 and 1 if x is in the range of [edge1, edge2]
+        - t = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+          return t * t * (3.0 - 2.0 * t);
+_______________________________________________________________________________________________________________________________
+
+    min func
+        -min(x, y)
+        - rets min of the 2 params
+        - ex: return x < y ? x : y;
+
+    max func
+        - max(x, y)
+        - rets max of the 2 params
+        
+    clamp func
+        - clamp(a, minValue, maxValue)
+        - clamps a to the range [minValue, maxValue]
+
+    (NOT A BUILT IN BUT COMMON TO SEE)
+    Saturate func
+        - sat(a) or saturate(a)
+        - clamps a to the range [0.0, 1.0]
+
+_______________________________________________________________________________________________________________________________
+
+    abs function
+        - rets absolute value of a ( abs(a) )
+
+    floor function
+        - floor(a)
+        - returns nearest int val of a thats <= a
+
+    ceil function
+        - ceil(a)
+        - return nearest int value of a thats greater than or equal to 'a'
+
+    round function
+        - round(a)
+        - nearest int val to a
+
+    fract function
+        - fract(a)
+        - ret the fract part of a (ie fract(2.9) -> 0.9)
+
+    mod function
+        - mod(x,y)
+        - ret x mod y
+        - 'remainder of div'
+
+
+
+
