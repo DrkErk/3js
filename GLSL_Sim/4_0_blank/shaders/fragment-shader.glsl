@@ -48,11 +48,15 @@ vec3 yellow = vec3(1.0, 1.0, 0.0);
 void main() {
   vec3 colour = vec3(0.0);
 
-  vec2 cell = fract(vUvs * 10.0); // allows for a grid like effect
-  cell = abs(cell - 0.5);         // distance from center of cell
-  float distanceToCell = max(cell.x, cell.y); // max val on x and y
+  vec2 center = vUvs - 0.5; // subtracts 0.5 from all vec components. so x -0.5 and y -0.5, putting 0,0 at the center of the screen
 
-  colour = vec3(distanceToCell);
+  vec2 cell = fract(center * resolution / 100.0); // allows for a grid like effect. Now making it resolution independent and setting it to 100px 
+  cell = abs(cell - 0.5);         // distance from center of cell
+  float distanceToCell = 1.0 - 2.0 * max(cell.x, cell.y); // max val on x and y. Mul by 2 to increase range from 0-0.5 to 0-1. and inverse
+
+  float cellLine = smoothstep(0.0, 0.05, distanceToCell); // Only show the edges of the square
+
+  colour = mix(black, colour, cellLine);
 
   gl_FragColor = vec4(colour, 1.0);
 }
