@@ -48,6 +48,8 @@ vec3 yellow = vec3(1.0, 1.0, 0.0);
 void main() {
   vec3 colour = vec3(0.0);
 
+
+  // grid -------------------------------
   vec2 center = vUvs - 0.5; // subtracts 0.5 from all vec components. so x -0.5 and y -0.5, putting 0,0 at the center of the screen
 
   vec2 cell = fract(center * resolution / 100.0); // allows for a grid like effect. Now making it resolution independent and setting it to 100px 
@@ -56,7 +58,17 @@ void main() {
 
   float cellLine = smoothstep(0.0, 0.05, distanceToCell); // Only show the edges of the square
 
+  float xAxis = smoothstep(0.0, 0.002, abs(vUvs.y -0.5)); // x Line
+  float yAxis = smoothstep(0.0, 0.002, abs(vUvs.x -0.5)); // y Line
+
+  // lines ------------------------------
+  vec2 pos = center * resolution / 100.0;               // set up pos linear line
+  float functionLine1 = smoothstep(0.0, 0.075, abs(pos.y - pos.x)); //postive linear line
+
   colour = mix(black, colour, cellLine);
+  colour = mix(blue, colour, xAxis);
+  colour = mix(blue, colour, yAxis);
+
 
   gl_FragColor = vec4(colour, 1.0);
 }
