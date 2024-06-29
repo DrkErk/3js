@@ -63,11 +63,17 @@ void main() {
 
   // lines ------------------------------
   vec2 pos = center * resolution / 100.0;               // set up pos linear line
-  float functionLine1 = smoothstep(0.0, 0.075, abs(pos.y - pos.x)); //postive linear line
+  float value1 = pos.x;
+  float value2 = ceil(pos.x); //round(pos.x); makes it centered  //floor(pos.x); makes the second line into stairs
+                 //fract(pos.x); and mod(pos.x); do this repeating 0 to some number little line. no more y movement
+  float functionLine1 = smoothstep(0.0, 0.075, abs(pos.y - value1)); //postive linear line
+  float functionLine2 = smoothstep(0.0, 0.075, abs(pos.y - value2)); //  second messing around line
 
   colour = mix(black, colour, cellLine);
   colour = mix(blue, colour, xAxis);
   colour = mix(blue, colour, yAxis);
+  colour = mix(yellow, colour, functionLine1);
+  colour = mix(yellow, colour, functionLine2);
 
 
   gl_FragColor = vec4(colour, 1.0);
