@@ -65,6 +65,29 @@ ________________________________________________________________________________
 
 _______________________________________________________________________________________________________________________________
 Inverse Lerp, remap, derivative func
-        -
 
+  ** NOT BUILT INTO THE LIBRARIES **
+
+    inverse lerp function
+        - inverseLerp( currentValue, minValue, maxValue); so 0.0, 0.0, 100.0 would ret 0.0 and 50.0, 0.0, 100.0, would ret 0.5
+        - return (currentValue - minValue) / (maxValue - minValue);
+
+    Remap function
+        - Remap(currentValue, inMin, inMax, outMin, outMax)
+        - float t = inverseLerp(currentValue, inMin, inMax);
+        - return mix(outMin, outMax, t);
+
+    dFdx(x), dFdy(x)/ derivative functions
+        - return screen space derivative with respect to x/y
+        - ONLY IN THE FRAG SHADER
+        - comps rate of change of val
+        - a way to peak into the neighboring frag shader 
+        - EXAMPLE:
+            vec3 wsPosition = getWorldSpacePosition();
+            vec3 wsNormal = normalize(cross(dFdx(wsPosition), dFdy(wsPosition)));
+            
+            gl_FragColor = vec4(wsNormal, 1.0);
+        - ws is world space
+        - used derivatives to recreate worldspace face normal of the mesh. only using the wsPosition
+        
 
