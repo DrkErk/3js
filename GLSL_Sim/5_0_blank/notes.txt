@@ -1,0 +1,54 @@
+More Math Funcs
+
+    -sqrt(x)
+    -inversesqrt(x) : `1.0 / sqrt()`
+    -pow(x,y)
+    -exp(x) : raise e to the power of x
+    -exp2(x) : raise 2 to the power of x
+    -log(x) : log of x
+    -log2(x) : base 2 log of x
+
+_________________________________________________________________________________
+- vUvs.x * (1.0 - vUvs.x) * 4.0; makes a inverse parabola
+_________________________________________________________________________________
+
+Common Vector Functions
+
+    with:
+        -vec3 someVector = ...
+        -vec3 normal = ...
+
+    Funcs:
+        -length of Vector
+            - float d = length(someVector);
+
+        -normalized copy of Vector
+            -vec3 nv = normalize(someVector);
+
+        -calculate the dot product
+            -float dp = dot(someVector. normal);
+
+        -calculate the cross product
+            -vec3 cp = cross(someVector, normal);
+
+        -calculate the reflection Vector
+            -vec3 rf1 = reflect(someVector, normal);
+
+        -calculate the refraction Vector
+            -vec3 rfr = refact(someVector, normal);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
