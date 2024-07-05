@@ -25,8 +25,8 @@ class SimonDevGLSLCourse {
     controls.target.set(0, 0, 0);
     controls.update();
 
-    const loader = new THREE.CubeTextureLoader();
-    const texture = loader.load([
+    const loader = new THREE.CubeTextureLoader(); // load the cube loader
+    const texture = loader.load([                 // load the 6 faces for the cube loader
         './resources/Cold_Sunset__Cam_2_Left+X.png',
         './resources/Cold_Sunset__Cam_3_Right-X.png',
         './resources/Cold_Sunset__Cam_4_Up+Y.png',
@@ -35,7 +35,7 @@ class SimonDevGLSLCourse {
         './resources/Cold_Sunset__Cam_1_Back-Z.png',
     ]);
 
-    this.scene_.background = texture;
+    this.scene_.background = texture;         // set the cuberloader as the background
 
     await this.setupProject_();
     
@@ -58,8 +58,8 @@ class SimonDevGLSLCourse {
     loader.setPath('./resources/');
     loader.load('suzanne.glb', (gltf) => {
       gltf.scene.traverse(c => {
-        c.material = material;
-      });
+        c.material = material; // traverse all of the imported object, with all of the children's materials to be replaced with the
+      });                      // custom shader
       this.scene_.add(gltf.scene);
     });
 
