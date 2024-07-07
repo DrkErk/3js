@@ -21,8 +21,42 @@ Lambertian Lighting /srgb ------------------------------------------------------
             -ie: vec3 sRGBColor = linearToSRGB(finalColor);
         -4. looks better
 
+---- Converting linear to sRGB is like this:
+        1. linear to gamma
+        2. gamma to sRGB
+        
+        -ie: vec3 linearToGamma(vec3 value)
+        {
+            return pow(value, vec3(1.0 / 2.0));
+        }
 
+        or ---------------------------------------------------
 
+        float toSRGB(float value) 
+        {
+            if (value < 0.0031308)
+            {
+                return value * 12.92;
+            }
+            return pow(value, 0.41666) * 1.055 - 0.055;
+        }
+        
+        vec3 linearToSRGB(vec3 value)
+        {
+            return vec3(toSRGB(value.x), toSRGB(value.y), toSRGB(value.z));
+        }
+
+        Better GLSL VERSION of above -------------------------------------
+
+        vec3 toSRGB(vec3 value) 
+        {
+            vec3 lt = vec3(lessThanEqual(value.rgb, vec3(0.0031308)));
+            vec3 v1 = value * 12.92;
+            vec3 v2 = pow(value.xyz, vec3(0.41666)) * 1.055 - vec3(0.055);
+
+            return mix(v2, v1, lt);
+
+        }
 
 
 
