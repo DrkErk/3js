@@ -33,7 +33,7 @@ void main() {
   vec3 diffuse = dp * lightColour;
 
 
-  lighting = ambient * 0.0 + hemi * 0.0 + diffuse;
+  lighting = ambient * 0.0 + hemi * 0.5 + diffuse * 0.5;
 
   vec3 colour = baseColour * lighting;
 

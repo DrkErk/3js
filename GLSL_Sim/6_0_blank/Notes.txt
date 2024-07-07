@@ -3,20 +3,23 @@
     - Hemi light is like light above and the reflection off of the ground
         - mix using the normal.y
 
-
-
-
-
-
-
-
 __________________________________________________________________________________________________________
 
+Lambertian Lighting /srgb -------------------------------------------------------------------------
 
+    - what ever you put in the frag shader, is what gets put directly to the screen
+        - (so sRGB)
 
+    -!!! Problems will arise since calculating light via dot(n,l) != sRGB (called linear color space) !!!!!!!!!!!!!
+        -Not horrible but doesn't look as good as it could.
 
-
-
+    -CONVERSION PROCESS:
+        -1. do lighting in linear space.
+        -2. calc the fin colorL
+            -ie: vec3 finalColor = baseColor * lighting;
+        -3. convert final to sRGB:
+            -ie: vec3 sRGBColor = linearToSRGB(finalColor);
+        -4. looks better
 
 
 
