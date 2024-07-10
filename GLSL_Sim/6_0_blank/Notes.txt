@@ -54,7 +54,7 @@ Lambertian Lighting /srgb ------------------------------------------------------
         vec3 linearTosRGB(vec3 value) 
         {
             vec3 lt = vec3(lessThanEqual(value.rgb, vec3(0.0031308)));
-            
+
             vec3 v1 = value * 12.92;
             vec3 v2 = pow(value.xyz, vec3(0.41666)) * 1.055 - vec3(0.055);
 
@@ -62,8 +62,19 @@ Lambertian Lighting /srgb ------------------------------------------------------
         }
 
 
+__________________________________________________________________________________________________________
 
+Phong Specular  ------------------------------------------------------------------------------------------
 
+    -Looks like this:
+        vec3 phongSpecular(
+            vec3 viewDir, vec3 lightDir, vec3 lightColour, vec3 normal
+        ){
+            vec3 reflectDir = normalize(reflect(-lightDir, normal));
+            float phongValue = max(0.0, dot(viewDir, reflectDir));
+            phongValue = pow(phongValue, 32.00);
 
+            return lightColour * phongValue;
+        }
 
 

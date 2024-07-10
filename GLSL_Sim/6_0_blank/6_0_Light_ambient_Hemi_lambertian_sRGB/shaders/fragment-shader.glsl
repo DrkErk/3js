@@ -1,5 +1,6 @@
 
 varying vec3 vNormal;
+varying vec3 vPosition;
 
 float inverseLerp(float v, float minValue, float maxValue) {
   return (v - minValue) / (maxValue - minValue);
@@ -26,6 +27,7 @@ void main() {
   vec3 baseColour = vec3(0.5);
   vec3 lighting = vec3(0.0);
   vec3 normal = normalize(vNormal); // re normalized
+  vec3 viewDir = normalize(cameraPosition - vPosition); // viewdir is world pos from camera position. cameraPos is supplied by 3js
 
   // Ambient
   vec3 ambient = vec3(0.5);
@@ -44,6 +46,12 @@ void main() {
 
   vec3 diffuse = dp * lightColour;
 
+  // Phong Specular
+  vec3 r = normalize(reflect(-lightDir, normal)); // reflect
+  float phongValue = max(0.0, dot(viewDir, r));
+  phongValue = pow(phongValue, 32.0); // (larger pow is highlight lower pow is glossy look)
+
+  vec3 specular = vec3(phongValue);
 
   lighting = ambient * 0.0 + hemi * 0.5 + diffuse * 0.5;
 
