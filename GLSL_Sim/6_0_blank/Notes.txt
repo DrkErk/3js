@@ -77,4 +77,39 @@ Phong Specular  ----------------------------------------------------------------
             return lightColour * phongValue;
         }
 
+__________________________________________________________________________________________________________
+
+IBL Specular and fresnel  ------------------------------------------------------------------------------------------
+
+    - IBL: image based lighting
+    - other names include: (environment mapping) and (reflection mapping)
+
+    - Concept is the same: capture the env into a texture. Then sample from said texture
+
+    - Different methods for creating an environment map:
+        -OBSCURE:
+            -Paraboloid maps
+            -Dual Paraboloid maps
+            -Octahedron maps
+            -HEALPix maps
+
+        -MIGHT SEE:
+            -Equirectangular maps
+
+        -WILL SEE:
+            -Cube maps
+            -Sphere maps
+
+    - Glsl code for CUBE MAP:
+        -Different sampler
+        
+        uniform samplerCube ourCubeMap;
+        
+        //code
+
+        //sample from it using a direction 
+        vec4 sample = textureCube(ourCubeMap, direction);
+
+
+
 

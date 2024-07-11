@@ -1,4 +1,5 @@
 
+uniform samplerCube specMap;
 varying vec3 vNormal;
 varying vec3 vPosition;
 
@@ -53,7 +54,22 @@ void main() {
 
   vec3 specular = vec3(phongValue);
 
-  lighting = ambient * 0.0 + hemi * 0.5 + diffuse * 0.5;
+  // IBL specular
+  //-- reflect on the normal. SO call reflect on the negative view direction then the normal
+
+  vec3 iblCoord = normalize(reflect(-viewDir, normal));
+  vec3 iblSample = textureCube(specMap, iblCoord).xyz;
+
+  specular += iblSample * 0.5;
+
+  // FRESNEL
+  // float fresnel = dot(viewDir, normal); WHITE FACING BLACK EDGES
+  float fresnel = 1.0 - max(dot(viewDir, normal));
+  fresnel = pow(fresnel, 2.0);
+
+  specular *= fresnel;
+
+  lighting = ambient * 0.0 + hemi * 0.0 + diffuse * 1.0;
 
   vec3 colour = baseColour * lighting;
 
