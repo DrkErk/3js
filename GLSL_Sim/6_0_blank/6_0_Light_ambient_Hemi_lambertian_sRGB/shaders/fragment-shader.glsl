@@ -47,29 +47,32 @@ void main() {
 
   vec3 diffuse = dp * lightColour;
 
-  // Phong Specular
-  vec3 r = normalize(reflect(-lightDir, normal)); // reflect
-  float phongValue = max(0.0, dot(viewDir, r));
-  phongValue = pow(phongValue, 32.0); // (larger pow is highlight lower pow is glossy look)
+  // FROM PHONG/ IBL/ SPEC ---- - REMOVED FOR TOON SHADER 
+  // -------------------------------------------------------------------------------------------------
+  // // Phong Specular
+  // vec3 r = normalize(reflect(-lightDir, normal)); // reflect
+  // float phongValue = max(0.0, dot(viewDir, r));
+  // phongValue = pow(phongValue, 32.0); // (larger pow is highlight lower pow is glossy look)
+  //
+  // vec3 specular = vec3(phongValue);
+  //
+  // // IBL specular
+  // //-- reflect on the normal. SO call reflect on the negative view direction then the normal
+  //
+  // vec3 iblCoord = normalize(reflect(-viewDir, normal));
+  // vec3 iblSample = textureCube(specMap, iblCoord).xyz;
+  //
+  // specular += iblSample * 0.5;
+  //
+  // // FRESNEL
+  // // float fresnel = dot(viewDir, normal); WHITE FACING BLACK EDGES
+  // float fresnel = 1.0 - max(dot(viewDir, normal));
+  // fresnel = pow(fresnel, 2.0);
+  //
+  // specular *= fresnel;
+  //------------------------------------------------------------------------------------------------------
 
-  vec3 specular = vec3(phongValue);
-
-  // IBL specular
-  //-- reflect on the normal. SO call reflect on the negative view direction then the normal
-
-  vec3 iblCoord = normalize(reflect(-viewDir, normal));
-  vec3 iblSample = textureCube(specMap, iblCoord).xyz;
-
-  specular += iblSample * 0.5;
-
-  // FRESNEL
-  // float fresnel = dot(viewDir, normal); WHITE FACING BLACK EDGES
-  float fresnel = 1.0 - max(dot(viewDir, normal));
-  fresnel = pow(fresnel, 2.0);
-
-  specular *= fresnel;
-
-  lighting = ambient * 0.0 + hemi * 0.0 + diffuse * 1.0;
+  lighting = ambient * 0.0 + hemi * 0.2 + diffuse * 0.8;
 
   vec3 colour = baseColour * lighting;
 
