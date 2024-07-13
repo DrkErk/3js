@@ -72,6 +72,9 @@ void main() {
   // specular *= fresnel;
   //------------------------------------------------------------------------------------------------------
 
+  // Toon Shader
+  
+
   lighting = ambient * 0.0 + hemi * 0.2 + diffuse * 0.8;
 
   vec3 colour = baseColour * lighting;
