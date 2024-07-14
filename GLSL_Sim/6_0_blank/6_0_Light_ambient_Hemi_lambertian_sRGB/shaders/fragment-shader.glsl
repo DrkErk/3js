@@ -73,11 +73,33 @@ void main() {
   //------------------------------------------------------------------------------------------------------
 
   // Toon Shader
+  //dp *= step(0.5, dp); // ALL IT TAKES FOR TOON SHADING
+  dp *= smoothstep(0.5, 0.505, dp);
+
+  vec3 specular = vec3(0.0);
+  vec3 diffuse = dp * lightColour;
+
+  //specular
+  vec3 r = normalize(reflect(-lightDir, normal)); 
+  float phongValue = max(0.0, dot(viewDir, r));
+  phongValue = pow(phongValue, 128.0);
+
+  // FRESNEL
+  float fresnel = 1.0 - max(dot(viewDir, normal));
+  fresnel = pow(fresnel, 2.0);
+
+  specular += phongValue;
+  specular = smoothstep(0.5, 0.51, specular);
   
 
-  lighting = ambient * 0.0 + hemi * 0.2 + diffuse * 0.8;
+  lighting = hemi * 0.2 + diffuse * 0.8;
 
-  vec3 colour = baseColour * lighting;
+  vec3 colour = modelColour * lighting + specular;
+
+  // was in all version but toon shading
+  // lighting = ambient * 0.0 + hemi * 0.2 + diffuse * 0.8;
+  //
+  // vec3 colour = baseColour * lighting;
 
   // colour = linearTosRGB(colour); Correct way
   // next best which is quicker to use below
