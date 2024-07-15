@@ -84,15 +84,16 @@ void main() {
   float phongValue = max(0.0, dot(viewDir, r));
   phongValue = pow(phongValue, 128.0);
 
-  // FRESNEL
+  // FRESNEL (in this case, its the rim light)
   float fresnel = 1.0 - max(dot(viewDir, normal));
   fresnel = pow(fresnel, 2.0);
+  fresnel *= step( 0.5, fresnel); // to make a sharp colo add
 
   specular += phongValue;
   specular = smoothstep(0.5, 0.51, specular);
   
 
-  lighting = hemi * 0.2 + diffuse * 0.8;
+  lighting = hemi * (fresnel + 0.2) + diffuse * 0.8;
 
   vec3 colour = modelColour * lighting + specular;
 
