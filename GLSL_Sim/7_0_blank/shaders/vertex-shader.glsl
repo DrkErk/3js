@@ -18,7 +18,8 @@ float remap(float v, float inMin, float inMax, float outMin, float outMax) {
 void main() {	
   vec3 localSpacePosition = position;
 
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(localSpacePosition, 1.0);
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(localSpacePosition, 1.0); // vec4 because w coord is like a scaling value
+  // 1 would be positional coords and 0 would be coord vectors
   vNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
   vPosition = (modelMatrix * vec4(localSpacePosition, 1.0)).xyz;
 }
