@@ -1,9 +1,10 @@
 
 varying vec3 vNormal;
 varying vec3 vPosition;
+varying vec4 vColour;
 
-uniform float time;
-
+// removed for varying in depth
+//uniform float time;
 
 float inverseLerp(float v, float minValue, float maxValue) {
   return (v - minValue) / (maxValue - minValue);
@@ -28,18 +29,32 @@ mat3 rotateY(float radians)
 }
 
 void main() {	
-  // THE RESULTS ARE NON COMMUNITATIVE, ORDER MATTERS!!!!!!
-  // Everything starts at the origin!!!!!
-  //
-  vec3 localSpacePosition = position; // position is brought in from the obj itself
-  //localSpacePosition.z += sin(time); // makes the obj move back and forth on the z
-  // We then need the remap func for scaling
-  //localSpacePosition.xz *= remap(sin(time), -1.0, 1.0, 0.5, 1.5);
-  // ROTATION
-  localSpacePosition = rotateY(time) * localSpacePosition; 
+  
+  vec3 localSpacePosition = position;
+
+  //-- REMOVED FOR VARYING IN MORE DEPTH
+  //==
+  // // THE RESULTS ARE NON COMMUNITATIVE, ORDER MATTERS!!!!!!
+  // // Everything starts at the origin!!!!!
+  // //
+  // vec3 localSpacePosition = position; // position is brought in from the obj itself
+  // //localSpacePosition.z += sin(time); // makes the obj move back and forth on the z
+  // // We then need the remap func for scaling
+  // //localSpacePosition.xz *= remap(sin(time), -1.0, 1.0, 0.5, 1.5);
+  // // ROTATION
+  // localSpacePosition = rotateY(time) * localSpacePosition; 
+
+
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(localSpacePosition, 1.0); // vec4 because w coord is like a scaling value
   // 1 would be positional coords and 0 would be coord vectors
   vNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
-  vPosition = (modelMatrix * vec4(localSpacePosition, 1.0)).xyz;
+  vPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+
+  vec3 red = vec3(1.0, 0.0, 0.0);
+  vec3 blue = vec3(0.0, 0.0, 1.0);
+
+  float t = remap(vPosition.x, -0.5, 0.5, 0.0, 1.0); // since screen goes from -0.5 to 0.5, a color remap is need to go from 0 to 1
+
+  vColour = vec4(mix(red, blue, t), t);
 }

@@ -3,6 +3,7 @@ uniform samplerCube specMap;
 
 varying vec3 vNormal;
 varying vec3 vPosition;
+varying vec4 vColour;
 
 float inverseLerp(float v, float minValue, float maxValue) {
   return (v - minValue) / (maxValue - minValue);
@@ -14,7 +15,23 @@ float remap(float v, float inMin, float inMax, float outMin, float outMax) {
 }
 
 void main() {
-  vec3 modelColour = vec3(0.5);
+  vec3 modelColour = vColour;
+
+  // FRAG SHADER PART
+  if(vPosition.y > 0.0)
+  {
+  vec3 red = vec3(1.0, 0.0, 0.0);
+  vec3 blue = vec3(0.0, 0.0, 1.0);
+
+  float t = remap(vPosition.x, -0.5, 0.5, 0.0, 1.0); 
+
+  modelColour = mix(red, blue, t);
+  }
+
+  // DIVIDING LINE
+  float middleLine = smoothstep(0.004, 0.004, abs(vPosition.y));
+  modelColour = mix(vec3(0.0),)
+
   vec3 lighting = vec3(0.0);
 
   vec3 normal = normalize(vNormal);
