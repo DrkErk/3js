@@ -1,0 +1,22 @@
+    Varyings in depth:
+        -Be thoughtful for what goes in vertex vs fragments
+            -values can be linearly interpolated work great
+                -position as an example
+                -halfway between pos p1 and p2 is mix(p1, p2, 0.5);
+            -some values are close enough,
+                -ie normals
+                -renormalizing them in the frag shader is often the good enough
+            -some calculations should be done in the FRAG SHADER!!!
+                -if interpolating causes issues (or just teslate enough)
+
+
+
+
+
+
+
+
+
+
+
+
