@@ -55,6 +55,9 @@ void main() {
   vec3 blue = vec3(0.0, 0.0, 1.0);
 
   float t = remap(vPosition.x, -0.5, 0.5, 0.0, 1.0); // since screen goes from -0.5 to 0.5, a color remap is need to go from 0 to 1
-
+  t = pow(t, 2.0);  // THIS ADJUSTMENT RAN FOR EVERY PIXEL ON THE UPPER HALF OF THE SCREEN VS 
+                    // BUT BECAUSE A VARYING IS RAN ACROSS EACH TRIANGLE, NOTHING IS CHANGED. IE a square is 2 TRIANGLES
+  // If you increase the tesalation, you get more triangles and thus would make this look better.
+  
   vColour = vec4(mix(red, blue, t), t);
 }
