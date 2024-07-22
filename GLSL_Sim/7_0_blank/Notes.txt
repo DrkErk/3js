@@ -9,7 +9,13 @@
             -some calculations should be done in the FRAG SHADER!!!
                 -if interpolating causes issues (or just teslate enough)
 
+----------------------------------------------------------------------------------------------------------------------------------------
+ EASING FUNCTIONS!
+    - from https://easings.net/
+    - list of easing functions
+    - (the code is in type script but can be converted to work in glsl)
 
+    - GOOD TO REMEMBER!!!
 
 
 
