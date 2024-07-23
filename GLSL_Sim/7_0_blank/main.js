@@ -65,7 +65,7 @@ class SimonDevGLSLCourse {
     this.material_ = material;
 
     //const geometry = new THREE.BoxGeometry(1, 1, 1, 4, 1, 1,); // 4 distinct line graphs // REMOVED FOR WARP SPHERE
-    const geometry = new THREE.IcosahedronGeometery(1, 128);
+    const geometry = new THREE.IcosahedronGeometry(1, 128);
 
     const mesh = new THREE.Mesh(geometry, material);
     this.scene_.add(mesh);
