@@ -3,6 +3,7 @@ varying vec3 vNormal;
 varying vec3 vPosition;
 varying vec4 vColour;
 
+
 // removed for varying in depth
 //uniform float time;
 
@@ -44,20 +45,26 @@ void main() {
   // // ROTATION
   // localSpacePosition = rotateY(time) * localSpacePosition; 
 
-
+  float t = sin(localSpacePosition.y * 20.0 + time * 10.0);
+  t = remap(t, -1.0, 1.0, 0.0, 0.2); // remaps the function so it doesnt go negative
+  localSpacePosition += normal * t; // looks better but is pitched
+  // localSpacePosition += t; // makes tubes
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(localSpacePosition, 1.0); // vec4 because w coord is like a scaling value
   // 1 would be positional coords and 0 would be coord vectors
   vNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
   vPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+  vColour = mix(vec3(0.0, 0.0, 0.5),  vec3(0.1, 0.5, 0.8), smoothstep(0.0, 0.2, t));
 
-  vec3 red = vec3(1.0, 0.0, 0.0);
-  vec3 blue = vec3(0.0, 0.0, 1.0);
-
-  float t = remap(vPosition.x, -0.5, 0.5, 0.0, 1.0); // since screen goes from -0.5 to 0.5, a color remap is need to go from 0 to 1
-  t = pow(t, 2.0);  // THIS ADJUSTMENT RAN FOR EVERY PIXEL ON THE UPPER HALF OF THE SCREEN VS 
-                    // BUT BECAUSE A VARYING IS RAN ACROSS EACH TRIANGLE, NOTHING IS CHANGED. IE a square is 2 TRIANGLES
-  // If you increase the tesalation, you get more triangles and thus would make this look better.
-  
-  vColour = vec4(mix(red, blue, t), t);
+  //----------------------------- RM for warp sphere
+  //-----------------------------
+  // vec3 red = vec3(1.0, 0.0, 0.0);
+  // vec3 blue = vec3(0.0, 0.0, 1.0);
+  //
+  // float t = remap(vPosition.x, -0.5, 0.5, 0.0, 1.0); // since screen goes from -0.5 to 0.5, a color remap is need to go from 0 to 1
+  // t = pow(t, 2.0);  // THIS ADJUSTMENT RAN FOR EVERY PIXEL ON THE UPPER HALF OF THE SCREEN VS 
+  //                   // BUT BECAUSE A VARYING IS RAN ACROSS EACH TRIANGLE, NOTHING IS CHANGED. IE a square is 2 TRIANGLES
+  // // If you increase the tesalation, you get more triangles and thus would make this look better.
+  //
+  // vColour = vec4(mix(red, blue, t), t);
 }

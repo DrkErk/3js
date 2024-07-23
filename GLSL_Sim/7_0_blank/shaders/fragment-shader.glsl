@@ -15,39 +15,49 @@ float remap(float v, float inMin, float inMax, float outMin, float outMax) {
 }
 
 void main() {
-  vec3 modelColour = vColour;
+  vec3 modelColour = vColour.xyz; 
 
-  vec3 red = vec3(1.0, 0.0, 0.0);
-  vec3 blue = vec3(0.0, 0.0, 1.0);
-  vec3 yellow = vec3(1.0, 1.0, 0.0);
-
-  float value1 = vColour.w;
-  float line1 = smoothstep(0.003, 0.004, abs(vPosition.y - mix(-0.5, 0.0, value1)));
-  modelColour = mix(yellow, modelColour, line1);
-
-  // FRAG SHADER PART
-  if(vPosition.y > 0.0)
-  {
-  float t = remap(vPosition.x, -0.5, 0.5, 0.0, 1.0); 
-  t = pow(t, 2.0);  // THIS ADJUSTMENT RAN FOR EVERY PIXEL ON THE UPPER HALF OF THE SCREEN VS 
-                    // BUT BECAUSE A VARYING IS RAN ACROSS EACH TRIANGLE, NOTHING IS CHANGED. IE a square is 2 TRIANGLES
-  modelColour = mix(red, blue, t);
-
-  
-  float value2 = t;
-  float line2 = smoothstep(0.003, 0.004, abs(vPosition.y - mix(0.0, 0.5, value2)));
-  modelColour = mix(yellow, modelColour, line2);
-
-  }
-
-  // DIVIDING LINE
-  float middleLine = smoothstep(0.004, 0.004, abs(vPosition.y));
-  modelColour = mix(vec3(0.0), modelColour, middleLine); //mix black and color by middle line
-
-  vec3 lighting = vec3(0.0);
-
-  vec3 normal = normalize(vNormal);
+  //vec3 normal = normalize(vNormal);
+  vec3 normal = normalize(cross(dFdx(vPosition.xyz), dFdy(vPosition.xyz)));
   vec3 viewDir = normalize(cameraPosition - vPosition);
+  // ISSUE IS THAT flat normal will get visual problems if it stands still.
+  // requires more advanced fixes like building a tension shader in the vertex.
+
+  // RM FOR WOBBLY SPHERE
+  //--------------------------------------------------------------------------
+  // vec3 red = vec3(1.0, 0.0, 0.0);
+  // vec3 blue = vec3(0.0, 0.0, 1.0);
+  // vec3 yellow = vec3(1.0, 1.0, 0.0);
+  //
+  // float value1 = vColour.w;
+  // float line1 = smoothstep(0.003, 0.004, abs(vPosition.y - mix(-0.5, 0.0, value1)));
+  // modelColour = mix(yellow, modelColour, line1);
+  //
+  // // FRAG SHADER PART
+  // if(vPosition.y > 0.0)
+  // {
+  // float t = remap(vPosition.x, -0.5, 0.5, 0.0, 1.0); 
+  // t = pow(t, 2.0);  // THIS ADJUSTMENT RAN FOR EVERY PIXEL ON THE UPPER HALF OF THE SCREEN VS 
+  //                   // BUT BECAUSE A VARYING IS RAN ACROSS EACH TRIANGLE, NOTHING IS CHANGED. IE a square is 2 TRIANGLES
+  // modelColour = mix(red, blue, t);
+  //
+  //
+  // float value2 = t;
+  // float line2 = smoothstep(0.003, 0.004, abs(vPosition.y - mix(0.0, 0.5, value2)));
+  // modelColour = mix(yellow, modelColour, line2);
+  //
+  // }
+  //
+  // // DIVIDING LINE
+  // float middleLine = smoothstep(0.004, 0.004, abs(vPosition.y));
+  // modelColour = mix(vec3(0.0), modelColour, middleLine); //mix black and color by middle line
+  //
+  // vec3 lighting = vec3(0.0);
+  //
+  // vec3 normal = normalize(vNormal);
+  // vec3 viewDir = normalize(cameraPosition - vPosition);
+  // -----------------------------------------------------------------------------------
+
 
   // Ambient
   vec3 ambient = vec3(1.0);
