@@ -63,6 +63,18 @@ float sdfHexagon( in vec2 p, in float r)
   return length(p) * sign(p.y);
 }
 
+mat2 rotate2D(float angle)
+{
+  float s = sin(angle);
+  float c = cos(angle);
+
+  return mat2(c, -s, s, c);
+  //ROTATION HAS TO BE APPLIED BACKWARDS AND IN THE REVERSE ORDER
+  //so move then rotate would be offset then spin
+  // unlike in the vertex shader which would be spin then offset
+}
+
+
 void main() {
   vec2 pixelCoords = (vUvs - 0.5) * resolution; // to work in pixel coords
   
@@ -70,10 +82,19 @@ void main() {
   colour = drawGrid(colour, vec3(0.5), 10.0, 1.0);
   colour = drawGrid(colour, vec3(0.0), 100.0, 2.0);
 
-  //float d = sdfCircle(pixelCoords, 100.0);
+ 
+  float d = sdfCircle(pixelCoords, 100.0);
+  colour = mix(RED * 0.5, colour, smoothstep(-1.0, 1.0, d)); // circle
+  colour = mix(RED, colour, smoothstep(-0.5, 0.0, d)); // outline
+
   //float d = sdfLine(pixelCoords, vec2(-100.0, -50.0), vec2(200.0, -75.0));
-  float d = sdfBox(pixelCoords, vec2(200.0, 50.0));
-  colour = mix(RED, colour, step(5.0, d)); // step(0.0, d); for the circle // step(5.0, d)); for the line thickness
+
+  // REMOVED FOR ANTIALIASING/ SHADING
+  //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+  // vec2 pos = pixelCoords - vec2(200.0, 300.0); // pos to move to. 
+  // pos *= rotate2D(time * 0.25); //rotate
+  // float d = sdfBox(pos, vec2(200.0, 50.0));
+  // colour = mix(RED, colour, step(0.0, d)); // step(0.0, d); for the circle // step(5.0, d)); for the line thickness
 
   gl_FragColor = vec4(colour, 1.0);
 }

@@ -2,7 +2,7 @@
 --------------------------------------------------------------------------------------
 Transformations
     -SDFs operate on the assume that something is at the origin
-
+    -You NEED TO MOVE AND ROTATE IN THE OPPOSITE DIRECTION TO GET STUFF TO
 
 
 
