@@ -72,7 +72,7 @@ void main() {
 
   //float d = sdfCircle(pixelCoords, 100.0);
   //float d = sdfLine(pixelCoords, vec2(-100.0, -50.0), vec2(200.0, -75.0));
-  float d = sdfBox(pixelCoords, vec2(300.0, 100.0));
+  float d = sdfBox(pixelCoords, vec2(200.0, 50.0));
   colour = mix(RED, colour, step(5.0, d)); // step(0.0, d); for the circle // step(5.0, d)); for the line thickness
 
   gl_FragColor = vec4(colour, 1.0);
