@@ -74,6 +74,25 @@ mat2 rotate2D(float angle)
   // unlike in the vertex shader which would be spin then offset
 }
 
+float softMax(float a, float b, float k)
+{
+return log(exp(k * a) + exp(k * b)) / k;
+}
+
+float softMin(float a, float b, float k)
+{
+return -softMax(-a, -b, k)
+}
+
+float softMinValue(float a, float b, float k)
+{
+// Soft Max Probablilty Distribution
+// float h = exp(-b * k) / (exp(-a * k) + exp(-b * k));
+
+// Soft Min Val
+float h = remap(a - b, -1.0/ k, 1.0 / k, 0.0, 1.0);
+return h;
+}
 
 void main() {
   vec2 pixelCoords = (vUvs - 0.5) * resolution; // to work in pixel coords
@@ -82,10 +101,18 @@ void main() {
   colour = drawGrid(colour, vec3(0.5), 10.0, 1.0);
   colour = drawGrid(colour, vec3(0.0), 100.0, 2.0);
 
- 
-  float d = sdfCircle(pixelCoords, 100.0);
-  colour = mix(RED * 0.5, colour, smoothstep(-1.0, 1.0, d)); // circle
-  colour = mix(RED, colour, smoothstep(-0.5, 0.0, d)); // outline
+  float box = sdfBox(rotate2D(time * 0.5) * pixelCoords, vec2(200.0, 100.0));
+  float d1 = sdfCircle(pixelCoords - vec2(-300.0, -150.0), 150.0);
+  float d2 = sdfCircle(pixelCoords - vec2( 300.0, -150.0), 150.0);
+  float d3 = sdfCircle(pixelCoords - vec2( 0.0, 200.0), 150.0);
+  float d = opUnion(opUnion(d1, d2), d3);
+
+  vec3 sdfColour = mix(RED, BLUE, smoothstep(0.0, 1.0, softMinValue(box, d, 0.01)));
+
+  d = softMin(box, d, 0.5);
+  // d = opUnion(box,d); straight union of all objects
+  colour = mix(sdfColour * 0.5, colour, smoothstep(-1.0, 1.0, d)); // circle
+  colour = mix(sdfColour, colour, smoothstep(-0.5, 0.0, d)); // outline
 
   //float d = sdfLine(pixelCoords, vec2(-100.0, -50.0), vec2(200.0, -75.0));
 

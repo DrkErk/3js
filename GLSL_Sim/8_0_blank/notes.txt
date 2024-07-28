@@ -4,9 +4,22 @@ Transformations
     -SDFs operate on the assume that something is at the origin
     -You NEED TO MOVE AND ROTATE IN THE OPPOSITE DIRECTION TO GET STUFF TO
 
+--------------------------------------------------------------------------------------
+Booleans Operators
 
-
-
+    -Unions (Combo of SDF), intersections (Overlap of SDF), subtractions (everywhere except where the sdfs overlap)
+        -union:
+            float d1 = sdf1();
+            float d2 = sdf2();
+            float union = min(d1, d2);
+        -intersection:
+            float d1 = sdf1();
+            float d2 = sdf2();
+            float intersection = max(d1, d2);
+        -subtraction:
+            float d1 = sdf1();
+            float d2 = sdf2();
+            float intersection = max(-d1, d2);
 
 
 
