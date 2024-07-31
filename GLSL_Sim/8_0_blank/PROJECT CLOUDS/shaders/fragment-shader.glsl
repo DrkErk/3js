@@ -135,15 +135,15 @@ float sdStar5(in vec2 p, in float r, in float rf)
 void main() {
   vec2 pixelCoords = vUvs * resolution;
 
-  float dayLength = 20.0;
-  float dayTime = mod(time + 8.0, dayLength);
+  float dayLength = 20.0;  // How long a day lasts
+  float dayTime = mod(time + 8.0, dayLength); // mod the time to reset at 0
 
   vec3 colour = DrawBackground(dayTime);
 
   // SUN
-  if (dayTime < dayLength * 0.75) {
-    float t = saturate(inverseLerp(dayTime, 0.0, 1.0));
-    vec2 offset = vec2(200.0, resolution.y * 0.8) + mix(
+  if (dayTime < dayLength * 0.75) {    // if daytime add sun
+    float t = saturate(inverseLerp(dayTime, 0.0, 1.0)); 
+    vec2 offset = vec2(200.0, resolution.y * 0.8) + mix(  // Sun position
         vec2(0.0, 400.0), vec2(0.0), easeOut(t, 5.0));
 
     if (dayTime > dayLength * 0.5) {
@@ -151,14 +151,14 @@ void main() {
       offset = vec2(200.0, resolution.y * 0.8) + mix(vec2(0.0), vec2(0.0, 400.0), t);
     }
 
-    vec2 sunPos = pixelCoords - offset;
+    vec2 sunPos = pixelCoords - offset;   // Sun position
 
     float sun = sdfCircle(sunPos, 100.0);
     colour = mix(vec3(0.84, 0.62, 0.26), colour, smoothstep(0.0, 2.0, sun));
 
-    float s = max(0.001, sun);
-    float p = saturate(exp(-0.001 * s * s));
-    colour += 0.5 * mix(vec3(0.0), vec3(0.9, 0.85, 0.47), p);
+    float s = max(0.001, sun);  // sun outside ring shape
+    float p = saturate(exp(-0.001 * s * s)); // sun ring color
+    colour += 0.5 * mix(vec3(0.0), vec3(0.9, 0.85, 0.47), p); // add the sun ring colour to the background
   }
 
   // MOON
