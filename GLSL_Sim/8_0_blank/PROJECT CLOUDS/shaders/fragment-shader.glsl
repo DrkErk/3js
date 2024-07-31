@@ -85,9 +85,9 @@ float sdfMoon(vec2 pixelCoords) {
   return d;
 }
 
-float hash(vec2 v) {
-  float t = dot(v, vec2(36.5323, 73.945));
-  return sin(t);
+float hash(vec2 v) { // // // // // // // // // // // // // 
+  float t = dot(v, vec2(36.5323, 73.945)); // // // // // // This is what we do to add a little bit of randomness
+  return sin(t);  // // // // // // // // // // // // // //
 }
 
 float saturate(float t) {
@@ -225,10 +225,10 @@ void main() {
 
   const float NUM_CLOUDS = 8.0;
   for (float i = 0.0; i < NUM_CLOUDS; i += 1.0) {
-    float size = mix(2.0, 1.0, (i / NUM_CLOUDS) + 0.1 * hash(vec2(i)));
+    float size = mix(2.0, 1.0, (i / NUM_CLOUDS) + 0.1 * hash(vec2(i))); // // // // // Halfing actaully doubles and the reverse is true
     float speed = size * 0.25;
 
-    vec2 offset = vec2(i * 200.0 + time * 100.0 * speed, 200.0 * hash(vec2(i)));
+    vec2 offset = vec2(i * 200.0 + time * 100.0 * speed, 200.0 * hash(vec2(i)));// Hash here is the random adding point
     vec2 pos = pixelCoords - offset;
 
     pos = mod(pos, resolution);
