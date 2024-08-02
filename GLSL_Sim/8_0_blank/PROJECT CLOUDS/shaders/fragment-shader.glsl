@@ -140,7 +140,7 @@ void main() {
 
   vec3 colour = DrawBackground(dayTime);
 
-  // SUN
+  // SUN START --------------------------------------------------------------------
   if (dayTime < dayLength * 0.75) {    // if daytime add sun
     float t = saturate(inverseLerp(dayTime, 0.0, 1.0)); 
     vec2 offset = vec2(200.0, resolution.y * 0.8) + mix(  // Sun position
@@ -160,12 +160,14 @@ void main() {
     float p = saturate(exp(-0.001 * s * s)); // sun ring color
     colour += 0.5 * mix(vec3(0.0), vec3(0.9, 0.85, 0.47), p); // add the sun ring colour to the background
   }
+  // SUN END --------------------------------------------------------------------------------------------------
 
   // MOON
   if (dayTime > dayLength * 0.5) {
     float t = saturate(inverseLerp(dayTime, dayLength * 0.5, dayLength * 0.5 + 1.5));
-    vec2 offset = resolution * 0.8 + mix(
-        vec2(0.0, 400.0), vec2(0.0), easeOutBounce(t));
+
+    vec2 offset = resolution * 0.8 + mix(                 // This here is the position for 
+        vec2(0.0, 400.0), vec2(0.0), easeOutBounce(t));   // where the sun will start and end.
 
     if (dayTime > dayLength * 0.9) {
       t = saturate(
