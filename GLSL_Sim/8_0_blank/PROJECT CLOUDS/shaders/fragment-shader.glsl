@@ -78,11 +78,11 @@ float sdfCloud(vec2 pixelCoords) {
   return min(puff1, min(puff2, puff3));
 }
 
-float sdfMoon(vec2 pixelCoords) {
-  float d = opSubtraction(
-      sdfCircle(pixelCoords + vec2(50.0, 0.0), 80.0),
-      sdfCircle(pixelCoords, 80.0));
-  return d;
+float sdfMoon(vec2 pixelCoords) {                     //
+  float d = opSubtraction(                            // This is the moon
+      sdfCircle(pixelCoords + vec2(50.0, 0.0), 80.0), // It is made by subtracting one 
+      sdfCircle(pixelCoords, 80.0));                  // circle from another
+  return d;                                           //
 }
 
 float hash(vec2 v) { // // // // // // // // // // // // // 
@@ -162,7 +162,7 @@ void main() {
   }
   // SUN END --------------------------------------------------------------------------------------------------
 
-  // MOON
+  // MOON -----------------------------------------------------------------------------------------------------
   if (dayTime > dayLength * 0.5) {
     float t = saturate(inverseLerp(dayTime, dayLength * 0.5, dayLength * 0.5 + 1.5));
 
@@ -190,6 +190,7 @@ void main() {
     float moonGlow = sdfMoon(moonPos);
     colour += 0.1 * mix(vec3(1.0), vec3(0.0), smoothstep(-10.0, 15.0, moonGlow));
   }
+  // MOON END  --------------------------------------------------------------------------------------------------
 
   const float NUM_STARS = 24.0;
   for (float i = 0.0; i < NUM_STARS; i += 1.0) {
