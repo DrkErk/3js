@@ -82,7 +82,7 @@ float sdfMoon(vec2 pixelCoords) {                     //
   float d = opSubtraction(                            // This is the moon
       sdfCircle(pixelCoords + vec2(50.0, 0.0), 80.0), // It is made by subtracting one 
       sdfCircle(pixelCoords, 80.0));                  // circle from another
-  return d;                                           //
+  return d;                                           //  
 }
 
 float hash(vec2 v) { // // // // // // // // // // // // // 
@@ -175,14 +175,14 @@ void main() {
       offset = resolution * 0.8 + mix(vec2(0.0), vec2(0.0, 400.0), t);
     }
 
-    vec2 moonShadowPos = pixelCoords - offset + vec2(15.0);
-    moonShadowPos = rotate2D(3.14159 * -0.2) * moonShadowPos;
+    vec2 moonShadowPos = pixelCoords - offset + vec2(15.0);     // Moon Shadow based on other moon
+    moonShadowPos = rotate2D(3.14159 * -0.2) * moonShadowPos;   // POS
 
-    float moonShadow = sdfMoon(moonShadowPos);
-    colour = mix(vec3(0.0), colour, smoothstep(-40.0, 10.0, moonShadow));
-
-    vec2 moonPos = pixelCoords - offset;
-    moonPos = rotate2D(3.14159 * -0.2) * moonPos;
+    float moonShadow = sdfMoon(moonShadowPos);                             //  draw the moon  based on the position
+    colour = mix(vec3(0.0), colour, smoothstep(-40.0, 10.0, moonShadow));  //  moon color // blury here vs 0.0, 2.0 being solid
+ 
+    vec2 moonPos = pixelCoords - offset;                 // 
+    moonPos = rotate2D(3.14159 * -0.2) * moonPos;        // Moon angle
 
     float moon = sdfMoon(moonPos);
     colour = mix(vec3(1.0), colour, smoothstep(0.0, 2.0, moon));
@@ -192,6 +192,7 @@ void main() {
   }
   // MOON END  --------------------------------------------------------------------------------------------------
 
+  // STARS -------------------------------------------------------------------------------------------
   const float NUM_STARS = 24.0;
   for (float i = 0.0; i < NUM_STARS; i += 1.0) {
     float hashSample = hash(vec2(i * 13.0)) * 0.5 + 0.5;
@@ -206,8 +207,10 @@ void main() {
         dayLength * 0.9,
         dayLength * 0.95));
     }
+    // STARS END ----------------------------------------------------------------------------------
 
-    float size = mix(2.0, 1.0, hash(vec2(i, i + 1.0)));
+
+    float size = mix(2.0, 1.0, hash(vec2(i, i + 1.0))); // SO THE STARS DON'T ARENT THE BIGGEST AT THE TOP!
     vec2 offset = vec2(i * 100.0, 0.0) + 150.0 * hash(vec2(i));
     offset += mix(vec2(0.0, 600.0), vec2(0.0), easeOutBounce(t));
 
