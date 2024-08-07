@@ -1,0 +1,14 @@
+
+------------------------------------------------------------------------------------------------------------
+VALUE / GRADIENT NOISE
+    
+    Value Noise:
+        -lattice or grid of random vals
+        -sample from grid 
+        -blend the vals from the grid
+
+    Gradient noise:
+        -Instead of VALUES, uses random unit length vector
+        -so instead of blending, you calc the dot of each unit len vector of the 4 surrounding examples
+        
+------------------------------------------------------------------------------------------------------------
