@@ -17,7 +17,7 @@ float Math_Random(vec2 p)  // replace this by something better
   return -1.0+2.0*fract( p.x*p.y*(p.x+p.y) );
 }
 
-vec4 noise(vec2 coords) {
+vec4 noise(vec2 coords) {   // SHOULD LOOK SIM TO FILTER BUT BASED OFF OF texture it is based on the noise
   vec2 texSize = vec2(1.0);
   vec2 pc = coords * texSize;
   vec2 base = floor(pc);
@@ -36,20 +36,20 @@ vec4 noise(vec2 coords) {
 }
 
 vec4 filteredSample(sampler2D target, vec2 coords) {
-  vec2 texSize = vec2(2.0);
-  vec2 pc = coords * texSize - 0.5;
-  vec2 base = floor(pc) + 0.5;
+  vec2 texSize = vec2(2.0); // 2 by 2 square is 0.0 to 2.0
+  vec2 pc = coords * texSize - 0.5;  // 0.5 is the pixel center
+  vec2 base = floor(pc) + 0.5; // get the min number and at the 0.5 to set it back to the middle
 
-  vec4 s1 = texture2D(target, (base + vec2(0.0, 0.0)) / texSize);
-  vec4 s2 = texture2D(target, (base + vec2(1.0, 0.0)) / texSize);
-  vec4 s3 = texture2D(target, (base + vec2(0.0, 1.0)) / texSize);
-  vec4 s4 = texture2D(target, (base + vec2(1.0, 1.0)) / texSize);
+  vec4 s1 = texture2D(target, (base + vec2(0.0, 0.0)) / texSize); // 0,0
+  vec4 s2 = texture2D(target, (base + vec2(1.0, 0.0)) / texSize); // This is the 4 sampled textures in 4 spots
+  vec4 s3 = texture2D(target, (base + vec2(0.0, 1.0)) / texSize); // 0,1
+  vec4 s4 = texture2D(target, (base + vec2(1.0, 1.0)) / texSize); // 1,1
 
-  vec2 f = smoothstep(0.0, 1.0, fract(pc));
+  vec2 f = smoothstep(0.0, 1.0, fract(pc)); // How far along on the x and y the sample isw
 
-  vec4 px1 = mix(s1, s2, f.x);
-  vec4 px2 = mix(s3, s4, f.x);
-  vec4 result = mix(px1, px2, f.y);
+  vec4 px1 = mix(s1, s2, f.x);  // Lerp the 0,0/ 1,0
+  vec4 px2 = mix(s3, s4, f.x);  // Lerp the 0,1/ 1,1
+  vec4 result = mix(px1, px2, f.y); // Lerp between 2 lerp vals
   return result;
 }
 

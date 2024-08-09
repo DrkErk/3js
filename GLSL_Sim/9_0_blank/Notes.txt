@@ -12,3 +12,30 @@ VALUE / GRADIENT NOISE
         -so instead of blending, you calc the dot of each unit len vector of the 4 surrounding examples
         
 ------------------------------------------------------------------------------------------------------------
+FILTERING
+
+    -Bilinear filtering is usually just linear filtering
+    -Its the same thing that hardware does when sampling textures
+
+        
+------------------------------------------------------------------------------------------------------------
+PERLIN AND SIMPLEX
+
+    Fractal brownian motion (FBM)
+        -movements arent fully independent (memory remains)
+        -There is a momentum to it.
+        - multiply amplitude or sin(x) * amp to get higher amplitudes
+        - frequency change is mul in the sin function
+        - Stacking Y with the SIN frequencies will make them stack all of the sin waves on top of each other
+
+
+
+
+
+
+
+
+
+
+
+
