@@ -92,6 +92,7 @@ float evaluateFunction(float x) {
 // if sin func bas amp and freq
 // this amp and freq is is layered on at a lower amp but more frequent
 // this amp and freq is is layered on at a lower amp but more frequent
+//
 
   return y;
 }
