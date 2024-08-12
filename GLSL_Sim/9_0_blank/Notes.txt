@@ -27,7 +27,22 @@ PERLIN AND SIMPLEX
         - multiply amplitude or sin(x) * amp to get higher amplitudes
         - frequency change is mul in the sin function
         - Stacking Y with the SIN frequencies will make them stack all of the sin waves on top of each other
+    Code EX:
+    float FBM(vec3 position)
+    {
+        float amplitude = 0.5;
+        float frequency = 1.0;
+        float total = 0.0;
+    
+        for (int i = 0; i < OCTAVES; i++)  //OCTAVES IS THE NUMBER OF TIMES YOU LOOP
+        {
+            total += noise(position * frequency) * amplitude;
+            amplitude *= PERSISTANCE;     // HERST component
+            frequency *= LACUNARITY;
+        }
 
+        return total;
+    }
 
 
 
