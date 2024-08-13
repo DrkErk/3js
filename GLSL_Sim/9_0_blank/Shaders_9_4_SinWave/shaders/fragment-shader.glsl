@@ -17,6 +17,8 @@ vec3 PURPLE = vec3(1.0, 0.25, 1.0);
 //
 // https://www.shadertoy.com/view/lsf3WH
 // SimonDev: Renamed function to "Math_Random" from "hash"
+
+// Look into rands???
 float Math_Random(vec2 p)  // replace this by something better
 {
   p  = 50.0*fract( p*0.3183099 + vec2(0.71,0.113));
