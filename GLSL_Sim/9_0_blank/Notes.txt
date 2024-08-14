@@ -44,7 +44,7 @@ PERLIN AND SIMPLEX
         return total;
     }
 
-
+    -----*****************EX IS SHOWN IN THE FRAGMENT SHADER IN THE 9_0 BLANK***************
 
 
 

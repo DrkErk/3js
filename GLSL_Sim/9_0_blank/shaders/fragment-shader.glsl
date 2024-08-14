@@ -66,8 +66,16 @@ float fbm(vec3 p, int octaves, float persistence, float lacunarity) {
 }
 
 void main() {
-  vec2 pixelCoords = (vUvs - 0.5) * resolution;
-  vec3 colour = vec3(0.0);
+  
+  vec3 coords = vec3(vUvs * 10.0, time * 0.2);
+  float noiseSample = 0.0;
+
+  noiseSample = remap(fbm(coords, 16, 0.5,  2.0), -1.0, 1.0, 0.0, 1.0);
+  
+  // RM for perlin/simplex noise
+  //vec2 pixelCoords = (vUvs - 0.5) * resolution;
+
+  vec3 colour = vec3(noiseSample);
 
   gl_FragColor = vec4(colour, 1.0);
 }
