@@ -65,6 +65,30 @@ float fbm(vec3 p, int octaves, float persistence, float lacunarity) {
   return total;
 }
 
+//
+// For making mountains
+float ridgedFBM(vec3 p, int octaves, float persistence, float lacunarity) {
+  float amplitude = 0.5;
+  float frequency = 1.0;
+  float total = 0.0;
+  float normalization = 0.0;
+
+//
+//
+  for (int i = 0; i < octaves; ++i) {
+    float noiseValue = noise(p * frequency);
+    total += noiseValue * amplitude;
+    normalization += amplitude;
+    amplitude *= persistence;
+    frequency *= lacunarity;
+  }
+
+  total /= normalization;
+  total = smoothstep(-1.0, 1.0, total);
+
+  return total;
+}
+
 void main() {
   
   vec3 coords = vec3(vUvs * 10.0, time * 0.2);
