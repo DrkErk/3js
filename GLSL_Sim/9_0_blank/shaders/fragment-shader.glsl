@@ -77,6 +77,10 @@ float ridgedFBM(vec3 p, int octaves, float persistence, float lacunarity) {
 //
   for (int i = 0; i < octaves; ++i) {
     float noiseValue = noise(p * frequency);
+    //ADDING UP THE SUM OF EACH OCTAVE OF THE FBM, THEN ABSVAL IT, THEN INVERT WITH 1- VAL
+    noiseValue = abs(noiseValue);
+    noiseValue =  1.0 - noiseValue;
+    //
     total += noiseValue * amplitude;
     normalization += amplitude;
     amplitude *= persistence;
@@ -84,17 +88,51 @@ float ridgedFBM(vec3 p, int octaves, float persistence, float lacunarity) {
   }
 
   total /= normalization;
-  total = smoothstep(-1.0, 1.0, total);
+  total *= total; // makes it look sharper   
+  //total = smoothstep(-1.0, 1.0, total);
 
   return total;
 }
+
+//
+// turbulence FBM
+float turbulenceFBM(vec3 p, int octaves, float persistence, float lacunarity) {
+  float amplitude = 0.5;
+  float frequency = 1.0;
+  float total = 0.0;
+  float normalization = 0.0;
+
+  for (int i = 0; i < octaves; ++i) {
+    float noiseValue = noise(p * frequency);
+    //
+    noiseValue = abs(noiseValue);
+    //noiseValue =  1.0 - noiseValue; separates the 
+    //
+    total += noiseValue * amplitude;
+    normalization += amplitude;
+    amplitude *= persistence;
+    frequency *= lacunarity;
+  }
+
+  total /= normalization;
+  //
+  // not used here
+  //
+  //total *= total; // makes it look sharper   
+  //total = smoothstep(-1.0, 1.0, total);
+
+  return total;
+}
+
 
 void main() {
   
   vec3 coords = vec3(vUvs * 10.0, time * 0.2);
   float noiseSample = 0.0;
 
-  noiseSample = remap(fbm(coords, 16, 0.5,  2.0), -1.0, 1.0, 0.0, 1.0);
+  //noiseSample = remap(fbm(coords, 16, 0.5,  2.0), -1.0, 1.0, 0.0, 1.0);
+  //noiseSample = ridgedFBM(coords, 4, 0.5, 2.0);
+  noiseSample = turbulenceFBM(coords, 4, 0.5, 2.0);
   
   // RM for perlin/simplex noise
   //vec2 pixelCoords = (vUvs - 0.5) * resolution;

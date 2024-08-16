@@ -47,8 +47,13 @@ PERLIN AND SIMPLEX
     -----*****************EX IS SHOWN IN THE FRAGMENT SHADER IN THE 9_0 BLANK***************
 
 
+------------------------------------------------------------------------------------------------------------
+MORE NOISES
 
-
+    Cellular noises:
+        - "Think of a grid of cells, and in each cell there is a point that is offset in each cell"
+        - 'Treat it as a distance field'
+        - 'To calculate, take the min of distance the offset points in the nearest cells, that leaves you with the noise value'
 
 
 
