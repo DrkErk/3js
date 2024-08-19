@@ -124,6 +124,17 @@ float turbulenceFBM(vec3 p, int octaves, float persistence, float lacunarity) {
   return total;
 }
 
+float cellular(vec3 coords)
+{
+  vec2 gridBasePosition = floor(coords.xy);
+  vec2 gridCoordOffset = fract(coords.xy);
+  
+  float closest = 1.0;
+  for(float y = -2.0; y <= 2.0; y += 1.0)
+  {
+    for (float)
+  }
+}
 
 void main() {
   
