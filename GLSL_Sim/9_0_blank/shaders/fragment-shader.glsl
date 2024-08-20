@@ -132,7 +132,14 @@ float cellular(vec3 coords)
   float closest = 1.0;
   for(float y = -2.0; y <= 2.0; y += 1.0)
   {
-    for (float)
+    for (float x = -2.0; x <= 2.0; x += 1.0)
+    {
+      vec2 neighbourCellPosition = vec2(x,y);
+      vec2 cellWorldPosition = gridBasePosition + neighbourCellPosition;
+      vec2 cellOffset = vec2(
+        noise(vec3(cellWorldPosition, coords.z)
+      )
+    }
   }
 }
 
