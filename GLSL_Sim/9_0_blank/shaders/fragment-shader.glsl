@@ -137,8 +137,13 @@ float cellular(vec3 coords)
       vec2 neighbourCellPosition = vec2(x,y);
       vec2 cellWorldPosition = gridBasePosition + neighbourCellPosition;
       vec2 cellOffset = vec2(
-        noise(vec3(cellWorldPosition, coords.z)
-      )
+        noise(vec3(cellWorldPosition, coords.z) + vec3(243.432, 324.235, 0.0)),
+        noise(vec3(cellWorldPosition, coords.z))
+      );
+
+      float distToNeighbour = length(
+        neighbourCellPosition + cellOffset - gridCoordOffset);
+      closest = min(closest, distToNeighbour);
     }
   }
 }
@@ -150,7 +155,9 @@ void main() {
 
   //noiseSample = remap(fbm(coords, 16, 0.5,  2.0), -1.0, 1.0, 0.0, 1.0);
   //noiseSample = ridgedFBM(coords, 4, 0.5, 2.0);
-  noiseSample = turbulenceFBM(coords, 4, 0.5, 2.0);
+  //noiseSample = turbulenceFBM(coords, 4, 0.5, 2.0);
+
+  noiseSample = cellular(coords);
   
   // RM for perlin/simplex noise
   //vec2 pixelCoords = (vUvs - 0.5) * resolution;
