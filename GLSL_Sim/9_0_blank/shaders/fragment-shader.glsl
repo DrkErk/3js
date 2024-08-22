@@ -148,6 +148,10 @@ float cellular(vec3 coords)
   }
 }
 
+float stepped(float noiseSample){
+  float steppedSample = floor()
+}
+
 void main() {
   
   vec3 coords = vec3(vUvs * 10.0, time * 0.2);
