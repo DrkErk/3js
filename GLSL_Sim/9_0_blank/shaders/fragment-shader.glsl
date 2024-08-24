@@ -155,24 +155,91 @@ float stepped(float noiseSample){
   return steppedSample;
 }
 
+// domain warping: use a FBM to offset a second noise
+// looks like liquid metal
+float domainWarpingFBM(vec3 coords){
+  vec3 offset = vec3(
+    fbm(coords, 4, 0.5, 2.0),
+    fbm(coords + vec3(43.235, 23.112, 0.0), 4, 0.5, 2.0),
+    0.0
+  );
+  float noiseSample = fbm(coords + offset, 1, 0.5, 2.0);
+
+  vec3 offset2 = vec3(
+    fbm(coords + 4.0 * offset + vec3(5.325, 1.421, 3.235), 4, 0.5, 2.0),
+    fbm(coords + 4.0 * offset + vec3(4.32, 0.532, 6.324), 4, 0.5, 2.0),
+    0.0
+  );
+  noiseSample = fbm(coords + 4.0 * offset2, 1, 0.5, 2.0);
+
+ return noiseSample;
+}
+
+
 void main() {
   
   vec3 coords = vec3(vUvs * 10.0, time * 0.2);
   float noiseSample = 0.0;
 
-  // all remaps are needed
-  noiseSample = remap(fbm(coords, 16, 0.5,  2.0), -1.0, 1.0, 0.0, 1.0);
-  
-
+  //noiseSample = remap(noise(coords), -1.0, 1.0, 0.0, 1.0);
+  //noiseSample = remap(fbm(coords, 16, 0.5,  2.0), -1.0, 1.0, 0.0, 1.0);
   //noiseSample = ridgedFBM(coords, 4, 0.5, 2.0);
-  //noiseSample = turbulenceFBM(coords, 4, 0.5, 2.0);
+  noiseSample = turbulenceFBM(coords, 4, 0.5, 2.0);
   //noiseSample = cellular(coords);
-  noiseSample = stepped(noiseSample);
+  //noiseSample = stepped(noiseSample);
+  //noiseSample = remap(domainWarpingFBM( coords), -1.0, 1.0, 0.0, 1.0);
   
   // RM for perlin/simplex noise
   //vec2 pixelCoords = (vUvs - 0.5) * resolution;
 
   vec3 colour = vec3(noiseSample);
+
+  // GETTING A NORMAL WITH THE TURBULENCE FBM
+  vec3 pixel = vec3(0.5 / resolution, 0.0);
+
+  // z is swizzled because it is zero
+  float s1 = turbulenceFBM(coords + pixel.xzz, 4, 0.5, 2.0);
+  float s2 = turbulenceFBM(coords - pixel.xzz, 4, 0.5, 2.0);
+  float s3 = turbulenceFBM(coords + pixel.zyz, 4, 0.5, 2.0);
+  float s4 = turbulenceFBM(coords - pixel.zyz, 4, 0.5, 2.0);
+  vec3 normal = normalize(vec3(s1 - s2, s3 - s4, 0.001)); // the z val is a trial and error but in this .001 is good
+
+  // add lighting in from chap 6 ------------------------------------------------------------------------------
+  
+  // Hemi light        
+  vec3 skyColour = vec3(0.0, 0.3, 0.6);
+  vec3 groundColour = vec3(0.6, 0.3, 0.1);
+
+  float hemiMix = remap(normal.y, -1.0, 1.0, 0.0, 1.0);
+  vec3 hemi = mix(groundColour, skyColour, hemiMix);
+
+  // diffuse lighting
+  vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0)); // the point in which the light comes from
+  vec3 lightColour = vec3(1.0, 1.0, 0.9);
+  float dp = max(0.0, dot(lightDir, normal)); // max of dot product so there or no negative numbers
+
+  vec3 diffuse = dp * lightColour;
+  vec3 specular = vec3(0.0);
+
+ //specular
+  vec3 r = normalize(reflect(-lightDir, normal)); 
+  float phongValue = max(0.0, dot(vec3(0.0, 0.0, 1.0), r));
+  phongValue = pow(phongValue, 32.0);
+
+  specular += phongValue;
+  
+  vec3 baseColour = mix(
+    vec3(1.0, 0.25, 0.25),
+    vec3(1.0, 0.75, 0.0), 
+    smoothstep(0.0, 1.0, noiseSample)
+  );
+
+  vec3 lighting = hemi * 0.125 + diffuse * 0.5;
+
+  colour = baseColour * lighting + specular;
+  colour = pow( colour, vec3(1.0 / 2.2));
+
+  // ----------------------------------------------------------------------------------------------------------
 
   gl_FragColor = vec4(colour, 1.0);
 }
