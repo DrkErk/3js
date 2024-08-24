@@ -150,6 +150,9 @@ float cellular(vec3 coords)
 
 float stepped(float noiseSample){
   float steppedSample = floor(noiseSample * 10.0) / 10.0;
+  float remainder = fract(noiseSample * 10.0);
+  steppedSample = (steppedSample - remainder) * 0.5 + 0.5;
+  return steppedSample;
 }
 
 void main() {
@@ -157,11 +160,14 @@ void main() {
   vec3 coords = vec3(vUvs * 10.0, time * 0.2);
   float noiseSample = 0.0;
 
-  //noiseSample = remap(fbm(coords, 16, 0.5,  2.0), -1.0, 1.0, 0.0, 1.0);
+  // all remaps are needed
+  noiseSample = remap(fbm(coords, 16, 0.5,  2.0), -1.0, 1.0, 0.0, 1.0);
+  
+
   //noiseSample = ridgedFBM(coords, 4, 0.5, 2.0);
   //noiseSample = turbulenceFBM(coords, 4, 0.5, 2.0);
-
-  noiseSample = cellular(coords);
+  //noiseSample = cellular(coords);
+  noiseSample = stepped(noiseSample);
   
   // RM for perlin/simplex noise
   //vec2 pixelCoords = (vUvs - 0.5) * resolution;
