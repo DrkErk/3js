@@ -65,10 +65,10 @@ float fbm(vec3 p, int octaves, float persistence, float lacunarity) {
   return total;
 }
 
-vec3 GenerateSky() {
-  vec3 colour1 = vec3(0.4, 0.6, 0.9);
-  vec3 colour2 = vec3(0.1, 0.15, 0.4);
-  return mix(
+vec3 GenerateSky() {                               // This function generates
+  vec3 colour1 = vec3(0.4, 0.6, 0.9);              // the background gradient 
+  vec3 colour2 = vec3(0.1, 0.15, 0.4);             // of the blue sky
+  return mix(                                      //
       colour1, colour2, smoothstep(0.875, 1.0, vUvs.y));
 }
 
