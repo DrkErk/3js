@@ -104,6 +104,9 @@ void main() {
   vec3 colour = GenerateSky();
 
   vec2 timeOffset = vec2(time * 50.0, 0.0);
+  
+  ///// This code is to draw each of the mountains, they get lower and  darker each iteration
+  // back mountains will move so much faster than the front one because of the time offset being added after the scale
   vec2 mountainCoords = (pixelCoords - vec2(0.0, 400.0)) * 8.0 + timeOffset;
   colour = DrawMountains(colour, vec3(0.5), mountainCoords, 6000.0);
 
@@ -124,6 +127,7 @@ void main() {
 
   mountainCoords = (pixelCoords - vec2(0.0, -1400.0)) * 0.125 + timeOffset;
   colour = DrawMountains(colour, vec3(0.2), mountainCoords, 0.0);
+////////////////////////////////////////////////////////////////////////////////
 
   gl_FragColor = vec4(colour, 1.0);
 }
