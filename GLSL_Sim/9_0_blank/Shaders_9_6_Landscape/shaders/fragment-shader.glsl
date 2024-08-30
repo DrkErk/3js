@@ -76,21 +76,32 @@ vec3 DrawMountains(
     vec3 background, vec3 mountainColour, vec2 pixelCoords, float depth) {
   //
   // This val is the shape of the mountain
+  // Depth in the fbm allows for forcing noise sample to be different for each set of mountains
   float y = fbm( vec3(depth + pixelCoords.x / 256.0, 1.432, 3.643), 6, 0.5, 2.0) * 256.0;
   // the shape is based on the brownian motion. (adj for speed?)
 
+ ////////////////////////////////////////////////////////////
+ // Fog factor, makes it closer to sky color
+ ////// -------
   vec3 fogColour = vec3(0.4, 0.6, 0.9);
   float fogFactor = smoothstep(0.0, 8000.0, depth) * 0.5;
+//// -----
 
+/// --- fog in between the mountain slices
   float heightFactor = smoothstep(256.0, -512.00, pixelCoords.y);
   heightFactor *= heightFactor;
   fogFactor = mix(heightFactor, fogFactor, fogFactor);
+/// -------
 
   mountainColour = mix(mountainColour, fogColour, fogFactor);
+  //////////////////////////////////////////////////////////////////////
+
 
   float sdfMountain = pixelCoords.y - y; // Subtract the sdf part from the whole
 
+///////// Blur foreground and background
   float blur = 1.0 + smoothstep(200.0, 6000.0, depth) * 128.0 + smoothstep(200.0, -1400.0, depth) * 128.0;
+////////////////////////////////////
   vec3 colour = mix(
       mountainColour,
       background,
