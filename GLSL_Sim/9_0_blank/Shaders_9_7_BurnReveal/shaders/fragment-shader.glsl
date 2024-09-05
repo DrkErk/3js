@@ -78,7 +78,9 @@ void main() {
 
   float noiseSample = fbm(vec3(pixelCoords, 0.0) * 0.005, 4, 0.5, 2.0);
   float size = smoothstep(0.0, 15.0, time) * (50.0 + length(resolution) * 0.5);
+  // Len can be seen as going fron 0 - 0 to the x and y resolution. Length will give diag distance
   float d = sdfCircle(pixelCoords + 50.0 * noiseSample, size);
+  // Circle burn in
 
   vec2 distortion = noiseSample / resolution;
   vec2 uvDistortion = distortion * 20.0 * smoothstep(80.0, 20.0, d);
