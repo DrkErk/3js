@@ -94,14 +94,14 @@ void main() {
   colour = mix(vec3(0.0), colour, burnAmount);
 
   vec3 FIRE_COOLOUR = vec3(1.00, 0.5, 0.2);
-  float orangeAmount = smoothstep(0.0, 10.0, d);
-  orangeAmount = pow(orangeAmount, 0.25);
-  colour = mix(FIRE_COOLOUR, colour, orangeAmount);
+  float orangeAmount = smoothstep(0.0, 10.0, d); // add the orange fallout to the edge of 'd' which is the sdf
+  orangeAmount = pow(orangeAmount, 0.25); // Pow func to make the fallout
+  colour = mix(FIRE_COOLOUR, colour, orangeAmount); // orange color added on the edge is too strong, fall off before makes it look cleaner
 
   colour = mix(sample2, colour, smoothstep(0.0, 1.0, d));
 
   // Add a fiery glow
-  float glowAmount = smoothstep(0.0, 32.0, abs(d));
+  float glowAmount = smoothstep(0.0, 32.0, abs(d));  // abs val allows for glow inside and outside
   glowAmount = 1.0 - pow(glowAmount, 0.125);
   colour += glowAmount * vec3(1.0, 0.2, 0.05);
 
