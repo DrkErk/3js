@@ -76,14 +76,19 @@ float sdfCircle(vec2 p, float r) {
 void main() {
   vec2 pixelCoords = (vUvs - 0.5) * resolution;
 
+//
   float noiseSample = fbm(vec3(pixelCoords, 0.0) * 0.005, 4, 0.5, 2.0);
   float size = smoothstep(0.0, 15.0, time) * (50.0 + length(resolution) * 0.5);
   // Len can be seen as going fron 0 - 0 to the x and y resolution. Length will give diag distance
   float d = sdfCircle(pixelCoords + 50.0 * noiseSample, size);
+  // adding the FBM to the circle edge so its wavy and uneven
+
   // Circle burn in
 
+  // Distort the image near the burning parts
   vec2 distortion = noiseSample / resolution;
-  vec2 uvDistortion = distortion * 20.0 * smoothstep(80.0, 20.0, d);
+  vec2 uvDistortion = distortion * 20.0 * smoothstep(80.0, 20.0, d); // distort the uvs at the top of the texture with whats in smoothstep
+  // distortion str * 20.0 as how far we want to allow the distortion * smooth step of sdf distance
 
   vec3 sample1 = texture2D(diffuse1, vUvs + uvDistortion).xyz;
   vec3 sample2 = texture2D(diffuse2, vUvs).xyz;
