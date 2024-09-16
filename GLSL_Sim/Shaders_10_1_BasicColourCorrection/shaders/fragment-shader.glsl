@@ -35,9 +35,9 @@ float ColourDistance(vec3 c1, vec3 c2) {
 }
 
 void main() {
-  vec2 coords = fract(vUvs * vec2(2.0, 1.0));
-  coords.x = remap(coords.x, 0.0, 1.0, 0.25, 0.75);
-  vec3 colour = texture2D(diffuse2, coords).xyz;
+  vec2 coords = fract(vUvs * vec2(2.0, 1.0)); // dupes the texture side by side. Fract sets it up to deal with the same numbers on both sides
+  coords.x = remap(coords.x, 0.0, 1.0, 0.25, 0.75); // show the center fo the photo so that the photo isnt as distorted
+  vec3 colour = texture2D(diffuse2, coords).xyz; // get texture and apply on the coords
 
   if (vUvs.x > 0.5) {
     // Tinting
