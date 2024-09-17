@@ -40,39 +40,65 @@ void main() {
   vec3 colour = texture2D(diffuse2, coords).xyz; // get texture and apply on the coords
 
   if (vUvs.x > 0.5) {
+    // the color on the right gets the after effects.
+
+
     // Tinting
-    vec3 tintColour = vec3(1.0, 0.5, 0.5);
-    // colour *= tintColour;
+    vec3 tintColour = vec3(1.0, 0.5, 0.5); // set tint colors' color
+    // colour *= tintColour; // mul color to final color to adj by the mul
 
     // Brightness
-    float brightnessAmount = 0.1;
-    // colour += brightnessAmount;
+    float brightnessAmount = 0.1; // a brightness add
+    // colour += brightnessAmount; // add brightness here
 
     // Saturation
-    float luminance = dot(colour, vec3(0.2126, 0.7152, 0.0722));
-    float saturationAmount = 0.0;
+    
+    float luminance = dot(colour, vec3(0.2126, 0.7152, 0.0722)); // With article on relative luminence, the numbers are adjsted
+                                                                // dot(colour, vec3(1.0 / 3.0)) ; unbalanced saturation
+    float saturationAmount = 0.0; // 0.0, is gray scale // 1.0 is normal // 2.0 is saturated
     // colour = mix(vec3(luminance), colour, saturationAmount);
+
+
 
     // Contrast
     float contrastAmount = 1.0;
     float midpoint = 0.5;
-    // colour = saturate((colour - midpoint) * contrastAmount + midpoint);
-    // colour = smoothstep(vec3(0.0), vec3(1.0), colour);
+    // colour = saturate((colour - midpoint) * contrastAmount + midpoint); // This is a remap of range of 0.0, 1.0 now to -0.5, 0.5
+                // So saturate is used to set the range from 0 - 1 like a specific clamp
+
+    // colour = smoothstep(vec3(0.0), vec3(1.0), colour); // any thing that pushes color away/towards the mid point would be a contrast
+                // This  makes middle steeper and pushes the outer values out towards zero and one
+                // The issue is that there is no control here
+
     vec3 sg = sign(colour - midpoint);
+
+    // Crafted with demos*
+    //
+    //
     // colour = sg * pow(
     //     abs(colour - midpoint) * 2.0,
     //     vec3(1.0 / contrastAmount)) * 0.5 + midpoint;
 
+    // adding the matrix color to the image
     // The Matrix
     // colour = pow(colour, vec3(1.5, 0.8, 1.5));
 
+
+
+
     // Colour Boost
-    vec3 refColour = vec3(0.72, 0.25, 0.25);
-    // float colourWeight = 1.0 - distance(colour, refColour);
-    // colourWeight = smoothstep(0.45, 1.0, colourWeight);
+    // (thinking of a color as if it was in 3d space. and getting the)
+    //
+    vec3 refColour = vec3(0.72, 0.25, 0.25);              // mainly red color to be highlighted
+    // float colourWeight = 1.0 - distance(colour, refColour);  // a number that is 1 - distance from color to the ref color
+                                                            // Distance isnt the best measurement in this case
+    // colourWeight = smoothstep(0.45, 1.0, colourWeight);  //(basically a contrast) Drop the lower end and pick up the higher end
     float colourWeight = dot(normalize(colour), normalize(refColour));
     colourWeight = pow(colourWeight, 32.0);
-    // colour = mix(vec3(luminance), colour, colourWeight);
+    // colour = mix(vec3(luminance), colour, colourWeight);   // Now, mix between the grayscale of the img and the full color by the
+                                                          // weight of it.
+
+
 
     vec2 vignetteCoords = fract(vUvs * vec2(2.0, 1.0));
     // vec3 vignetteAmount = texture2D(vignette, vignetteCoords).xyz;
@@ -85,11 +111,17 @@ void main() {
 
     // colour *= vignetteAmount;
 
+
+
+
     // Pixelation
     vec2 dims = vec2(128.0, 128.0);
     vec2 texUV = floor(coords * dims) / dims;
     vec3 pixelated = texture2D(diffuse2, texUV).xyz;
     // colour = pixelated;
+
+
+
 
     // Ripples
     // vec2 pushedCoords = coords;
@@ -98,6 +130,9 @@ void main() {
     //     abs(pushedCoords.y - 0.5) * 2.0,
     //     0.7) * 0.5 + 0.5;
     // colour = texture2D(diffuse2, pushedCoords).xyz;
+
+
+ 
 
     float distToCenter = length(coords - 0.5);
     float d = sin(distToCenter * 50.0 - time * 2.0);
