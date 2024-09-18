@@ -120,29 +120,29 @@ void main() {
 
 
     // Pixelation
-    vec2 dims = vec2(128.0, 128.0);
-    vec2 texUV = floor(coords * dims) / dims;
-    vec3 pixelated = texture2D(diffuse2, texUV).xyz;
-    // colour = pixelated;
+    vec2 dims = vec2(128.0, 128.0);            // this is 128 pixels wide, and 128 tall
+    vec2 texUV = floor(coords * dims) / dims;  // mul coords by 64 and rounded down. then divide by 64 to bring back into range 
+    vec3 pixelated = texture2D(diffuse2, texUV).xyz; //
+        // colour = pixelated;
 
 
 
 
-    // Ripples
-    // vec2 pushedCoords = coords;
-    // float pushedSign = sign(pushedCoords.y - 0.5);
-    // pushedCoords.y = pushedSign * pow(
-    //     abs(pushedCoords.y - 0.5) * 2.0,
-    //     0.7) * 0.5 + 0.5;
-    // colour = texture2D(diffuse2, pushedCoords).xyz;
+    // Ripples                           //
+    // vec2 pushedCoords = coords;       // 
+    // float pushedSign = sign(pushedCoords.y - 0.5);   //
+    // pushedCoords.y = pushedSign * pow(               // This is the code from contrast but edited a bit
+    //     abs(pushedCoords.y - 0.5) * 2.0,             // in this case, it folds the center where y is 0 on
+    //     0.7) * 0.5 + 0.5;                            // 
+    // colour = texture2D(diffuse2, pushedCoords).xyz;  //
 
 
  
 
-    float distToCenter = length(coords - 0.5);
-    float d = sin(distToCenter * 50.0 - time * 2.0);
-    vec2 dir = normalize(coords - 0.5);
-    vec2 rippleCoords = coords + d * dir * 0.05;
+    float distToCenter = length(coords - 0.5); // len from center of the of the scene
+    float d = sin(distToCenter * 50.0 - time * 2.0); // the sin effect to get the ripple
+    vec2 dir = normalize(coords - 0.5); // store the direction of the center of the uv coord
+    vec2 rippleCoords = coords + d * dir * 0.05;  // modify ripple coords // mul uv offset with a val that is going from -1 to 1
     colour = texture2D(diffuse2, rippleCoords).xyz;
   }
 
