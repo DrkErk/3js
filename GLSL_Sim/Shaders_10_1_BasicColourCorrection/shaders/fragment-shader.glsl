@@ -84,7 +84,11 @@ void main() {
     // colour = pow(colour, vec3(1.5, 0.8, 1.5));
 
 
-
+    //
+    //
+    // ON WIKI as color spaces and perceptive differences *****************
+    //
+    //
 
     // Colour Boost
     // (thinking of a color as if it was in 3d space. and getting the)
@@ -93,21 +97,22 @@ void main() {
     // float colourWeight = 1.0 - distance(colour, refColour);  // a number that is 1 - distance from color to the ref color
                                                             // Distance isnt the best measurement in this case
     // colourWeight = smoothstep(0.45, 1.0, colourWeight);  //(basically a contrast) Drop the lower end and pick up the higher end
-    float colourWeight = dot(normalize(colour), normalize(refColour));
-    colourWeight = pow(colourWeight, 32.0);
+    
+    float colourWeight = dot(normalize(colour), normalize(refColour)); // The logic is based on the xyz being rgb. so the distance
+    colourWeight = pow(colourWeight, 32.0);                            // is less effective to be compared vs angle, so dot vs distance
     // colour = mix(vec3(luminance), colour, colourWeight);   // Now, mix between the grayscale of the img and the full color by the
                                                           // weight of it.
 
 
 
-    vec2 vignetteCoords = fract(vUvs * vec2(2.0, 1.0));
+    vec2 vignetteCoords = fract(vUvs * vec2(2.0, 1.0));  // fract coords is like x - floor(x) so towards edge from center is reset
     // vec3 vignetteAmount = texture2D(vignette, vignetteCoords).xyz;
 
-    float v1 = smoothstep(0.5, 0.2, abs(vignetteCoords.x - 0.5));
-    float v2 = smoothstep(0.5, 0.2, abs(vignetteCoords.y - 0.5));
-    float vignetteAmount = v1 * v2;
-    vignetteAmount = pow(vignetteAmount, 0.25);
-    vignetteAmount = remap(vignetteAmount, 0.0, 1.0, 0.5, 1.0);
+    float v1 = smoothstep(0.5, 0.2, abs(vignetteCoords.x - 0.5)); //horz vin
+    float v2 = smoothstep(0.5, 0.2, abs(vignetteCoords.y - 0.5)); // verti vin
+    float vignetteAmount = v1 * v2;                               // combo vin
+    vignetteAmount = pow(vignetteAmount, 0.25);                   // vin intensity
+    vignetteAmount = remap(vignetteAmount, 0.0, 1.0, 0.5, 1.0);   // add vin
 
     // colour *= vignetteAmount;
 
