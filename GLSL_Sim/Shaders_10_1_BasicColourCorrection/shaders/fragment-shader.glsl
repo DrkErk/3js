@@ -20,9 +20,10 @@ vec3 saturate(vec3 x) {
   return clamp(x, vec3(0.0), vec3(1.0));
 }
 
-float saturate(float x) {
-  return clamp(x, 0.0, 1.0);
-}
+// float saturate(float x) {
+//   return clamp(x, 0.0, 1.0);
+// }
+
 
 float ColourDistance(vec3 c1, vec3 c2) {
   float rm = (c1.x + c2.x) * 0.5 * 256.0;
