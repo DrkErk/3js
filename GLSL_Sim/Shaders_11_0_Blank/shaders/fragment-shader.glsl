@@ -3,6 +3,8 @@ varying vec2 vUvs;
 uniform vec2 resolution;
 uniform float time;
 
+
+// GENERAL TOOLBOX FUNCTIONS ////////////////////////////////////////////////////
 float inverseLerp(float v, float minValue, float maxValue) {
   return (v - minValue) / (maxValue - minValue);
 }
@@ -15,6 +17,7 @@ float remap(float v, float inMin, float inMax, float outMin, float outMax) {
 float saturate(float x) {
   return clamp(x, 0.0, 1.0);
 }
+//////////////////////////////////////////////////////////////////////////////
 
 // Copyright (C) 2011 by Ashima Arts (Simplex noise)
 // Copyright (C) 2011-2016 by Stefan Gustavson (Classic noise and others)
@@ -129,6 +132,7 @@ vec3 hash3( vec3 p ) // replace this by something better
 	return -1.0 + 2.0*fract(sin(p)*43758.5453123);
 }
 
+// NOISE FUNCTIONS ///////////////////////////////////////////////////////////////////////////////////////////
 float noise( in vec3 p )
 {
   vec3 i = floor( p );
@@ -166,11 +170,25 @@ float fbm(vec3 p, int octaves, float persistence, float lacunarity, float expone
 
   return total;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+vec3 GenerateStars(vec2 pixelCoords){
+  float cellWidth = 300.0; // cell width in pixels 
+  vec2 cellCoords = fract(pixelCoords / cellWidth); // divide the total pixels by the width 
+                                                    // Sub 0.5 to make the center 0 // *cellwidth to scale cell by pixels.
+  float distToStar = length(cellCoords);  // Distance from current pixel to the center of the cell
+  float starRadius = 4.0;
+  //float glow = smoothstep(starRadius + 1.0, starRadius, distToStar); // Solid circle
+  float glow = exp(-2.0 * distToStar / starRadius); // star round w falloff
+
+  return vec3(glow);
+}
 
 void main() {
   vec2 pixelCoords = (vUvs - 0.5) * resolution;
 
   vec3 colour = vec3(0.0);
+  colour = GenerateStars(pixelCoords);
 
   gl_FragColor = vec4(pow(colour, vec3(1.0 / 2.2)), 1.0);
 }
