@@ -172,6 +172,7 @@ float fbm(vec3 p, int octaves, float persistence, float lacunarity, float expone
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///// Main work area /////////////////////////////////////////////////////////////////////////
 vec3 GenerateStars(vec2 pixelCoords){
   float cellWidth = 300.0; // cell width in pixels 
   vec2 cellCoords = fract(pixelCoords / cellWidth); // divide the total pixels by the width 
