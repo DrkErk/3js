@@ -184,6 +184,7 @@ vec3 GenerateStars(vec2 pixelCoords){
 
   return vec3(glow);
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void main() {
   vec2 pixelCoords = (vUvs - 0.5) * resolution;
